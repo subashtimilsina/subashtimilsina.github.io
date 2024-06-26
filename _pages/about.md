@@ -1,25 +1,25 @@
 ---
 layout: about
-title: about
+title: About
 permalink: /
-subtitle: <a href='#'>Affiliations</a>. Address. Contacts. Moto. Etc.
+subtitle: PhD student at <a href='https://web.engr.oregonstate.edu/~fuxia/group.html'>Oregon State University</a>.
 
 profile:
   align: right
   image: prof_pic.jpg
   image_circular: false # crops the image to make it circular
   more_info: >
-    <p>555 your office number</p>
-    <p>123 your address street</p>
-    <p>Your City, State 12345</p>
+    <p>1148 Kelly Engineering</p>
+    <p>Center, 2500 NW Monroe Ave,</p>
+    <p>Corvallis, Oregon, 97330</p>
 
 news: true # includes a list of news items
 selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true # includes social icons at the bottom of the page
 ---
 
-Write your biography here. Tell the world about yourself. Link to your favorite [subreddit](http://reddit.com). You can put a picture in, too. The code is already in, just name your picture `prof_pic.jpg` and put it in the `img/` folder.
+I am a third-year PhD student in computer science at Oregon State University, advised by [Dr. Xiao Fu](https://web.engr.oregonstate.edu/~fuxia/). My research focuses on unsupervised representation learning, generative modeling, and multi-view learning.
 
-Put your address / P.O. box / other info right below your picture. You can also disable any of these elements by editing `profile` property of the YAML header of your `_pages/about.md`. Edit `_bibliography/papers.bib` and Jekyll will render your [publications page](/al-folio/publications/) automatically.
+Before starting my PhD, I worked as a data scientist at [Docsumo](https://www.docsumo.com/about), where I solved problems on computer vision and NLP tasks to extract information from documents.
 
-Link to your social media connections, too. This theme is set up to use [Font Awesome icons](https://fontawesome.com/) and [Academicons](https://jpswalsh.github.io/academicons/), like the ones below. Add your Facebook, Twitter, LinkedIn, Google Scholar, or just disable all of them.
+I hold a Bachelor's degree in Electronics and Communication Engineering from Pulchowk Campus, IOE, Tribhuvan University, Nepal. During my undergraduate years, I was an active member of the robotics club at Pulchowk Campus and built robots to compete in the Asia Pacific Robotics Competition (ABU Robocon), representing Nepal.
