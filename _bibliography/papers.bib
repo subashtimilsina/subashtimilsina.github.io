@@ -1,0 +1,44 @@
+
+
+@inproceedings{AbhishKhanal_etal2020,
+  author    = {Khanal, Abhish and Chand, Deepak and Chaudhary, Prakash and Timilsina, Subash and Panday, Sanjeeb Prasad and Shakya, Aman},
+  title     = {Search Disaster Victims using Sound Source Localization},
+  booktitle = {ISCRAM 2020 Conference Proceedings -- 17th International Conference on Information Systems for Crisis Response and Management},
+  editor    = {Hughes, Amanda and McNeill, Fiona and Zobel, Christopher W.},
+  pages     = {1022--1030},
+  year      = {2021},
+  address   = {Blacksburg, VA, USA},
+  publisher = {Virginia Tech},
+  abstract = {Sound Source Localization (SSL) are used to estimate the position of sound sources. Various methods have been used for detecting sound and its localization. This paper presents a system for stationary sound source localization by cubical microphone array consisting of eight microphones placed on four vertical adjacent faces which is mounted on three wheel omni-directional drive for the inspection and monitoring of the disaster victims in disaster areas. The proposed method localizes sound source on a 3D space by grid search method using Generalized Cross Correlation Phase Transform (GCC-PHAT) which is robust when operating in real life scenario where there is lack of visibility. The computed azimuth and elevation angle of victimized human voice are fed to embedded omni-directional drive system which navigates the vehicle automatically towards the stationary sound source.},
+  google_scholar_id={u5HHmVD_uO8C},
+  html={https://arxiv.org/abs/2103.06049},
+  code={https://github.com/subashtimilsina/Sound-Source-Localization}
+}
+
+
+@inproceedings{timilsina2023deep,
+  title={Deep spectrum cartography using quantized measurements},
+  author={Timilsina, Subash and Shrestha, Sagar and Fu, Xiao},
+  booktitle={ICASSP 2023-2023 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
+  pages={1--5},
+  year={2023},
+  organization={IEEE},
+  abstract = {Spectrum cartography (SC) techniques craft multi-domain (e.g., space and frequency) radio maps from limited measurements, which is an ill-posed inverse problem. Recent works used low-dimensional priors such as a low tensor rank structure and a deep generative model to assist radio map estimation—with provable guarantees. However, a premise of these approaches is that the sensors are able to send real-valued feedback to a fusion center for SC—yet practical communication systems often use (heavy) quantization for signaling. This work puts forth a limited feedback-based SC framework. Similar to a prior work, a generative adversarial network (GAN)-based deep prior is used in our framework for fending against heavy shadowing. However, instead of using real-valued feedback, a random quantization strategy is adopted and a maximum likelihood estimation (MLE) criterion is proposed. Analysis shows that the MLE provably recovers the radio map, under reasonable conditions. Simulations are conducted to showcase the effectiveness of the proposed approach.},
+  google_scholar_id={d1gkVwhDpl0C},
+  html={https://ieeexplore.ieee.org/abstract/document/10096058},
+}
+
+
+@article{timilsina2023quantized,
+  title={Quantized radio map estimation using tensor and deep generative models},
+  author={Timilsina, Subash and Shrestha, Sagar and Fu, Xiao},
+  journal={IEEE Transactions on Signal Processing},
+  abstract = {Spectrum cartography (SC), also known as radio map estimation (RME), aims at crafting multi-domain (e.g., frequency and space) radio power propagation maps from limited sensor measurements. While early methods often lacked theoretical support, recent works have demonstrated that radio maps can be provably recovered using low-dimensional models—such as the block-term tensor decomposition (BTD) model and certain deep generative models (DGMs)—of the high-dimensional multi-domain radio signals. However, these existing provable SC approaches assume that sensors send real-valued (full-resolution) measurements to the fusion center, which is unrealistic. This work puts forth a quantized SC framework that generalizes the BTD and DGM-based SC to scenarios where heavily quantized sensor measurements are used. A maximum likelihood estimation (MLE)-based SC framework under a Gaussian quantizer is proposed. Recoverability of the radio map using the MLE criterion is characterized under realistic conditions, e.g., imperfect radio map modeling and noisy measurements. Simulations and real-data experiments are used to showcase the effectiveness of the proposed approach.},
+  year={2023},
+  publisher={IEEE},
+  selected={true},
+  preview={sc.gif},
+  google_scholar_id={u-x6o8ySG0sC},
+  html={https://ieeexplore.ieee.org/abstract/document/10335642},
+  code={https://github.com/subashtimilsina/Quantized-Radio-Map-Estimation-BTD-and-DGM}
+}

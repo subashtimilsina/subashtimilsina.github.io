@@ -22,4 +22,4 @@ I am a third-year PhD student in computer science at Oregon State University, ad
 
 Before starting my PhD, I worked as a data scientist at [Docsumo](https://www.docsumo.com/about), where I solved problems on computer vision and NLP tasks to extract information from documents.
 
-I hold a Bachelor's degree in Electronics and Communication Engineering from Pulchowk Campus, IOE, Tribhuvan University, Nepal. During my undergraduate years, I was an active member of the robotics club at Pulchowk Campus and built robots to compete in the Asia Pacific Robotics Competition (ABU Robocon), representing Nepal.
+I hold a Bachelor's degree in Electronics and Communication Engineering from Pulchowk Campus, IOE, Tribhuvan University, Nepal. During my undergraduate years, I was an active member of the [robotics club at Pulchowk Campus](https://robotics.pcampus.edu.np), where I built robots and represented Nepal in the Asia Pacific Robotics Competition (ABU Robocon).
