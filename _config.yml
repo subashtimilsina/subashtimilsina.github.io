@@ -111,7 +111,7 @@ youtube_id: # your youtube channel id (youtube.com/@<youtube_id>)
 zotero_username: # your zotero username
 
 contact_note: >
-  I am quick with my email.
+  Reach me via email or LinkedIn.
 
 # -----------------------------------------------------------------------------
 # Analytics and search engine verification
@@ -311,8 +311,8 @@ display_categories: ["external-services"] # these categories will be displayed o
 # -----------------------------------------------------------------------------
 
 scholar:
-  last_name: [Einstein]
-  first_name: [Albert, A.]
+  last_name: [Timilsina]
+  first_name: [Subash]
 
   style: apa
   locale: en

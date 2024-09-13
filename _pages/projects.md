@@ -5,7 +5,7 @@ permalink: /projects/
 description: I will be updating my projects shortly.
 nav: true
 nav_order: 3
-display_categories: [work, fun]
+display_categories: [After 2020, Before 2020]
 horizontal: false
 ---
 

@@ -1,11 +1,11 @@
 ---
 layout: page
-title: project 3 with very long name
-description: a project that redirects to another website
-img: assets/img/7.jpg
-redirect: https://unsplash.com
-importance: 3
-category: work
+title: IOT Based home automation
+description: Embedded hardware and simple webplatform for controlling devices.
+img: assets/img/esp826.png
+redirect: https://github.com/subashtimilsina/IOT-based-home-automation/
+importance: 6
+category: Before 2020
 ---
 
 Every project has a beautiful feature showcase page.
