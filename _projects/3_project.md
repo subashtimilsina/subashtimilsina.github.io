@@ -1,6 +1,6 @@
 ---
 layout: page
-title: IOT Based home automation
+title: IOT Based home automation.
 description: Embedded hardware and simple webplatform for controlling devices.
 img: assets/img/esp826.png
 redirect: https://github.com/subashtimilsina/IOT-based-home-automation/

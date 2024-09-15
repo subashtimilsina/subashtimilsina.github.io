@@ -2,7 +2,7 @@
 layout: page
 title: Projects
 permalink: /projects/
-description: I will be updating my projects shortly.
+description: Selected Projects that I have worked on.
 nav: true
 nav_order: 3
 display_categories: [After 2020, Before 2020]

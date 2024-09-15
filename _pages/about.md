@@ -23,3 +23,5 @@ I am a third-year PhD student in computer science at Oregon State University, ad
 Before starting my PhD, I worked as a data scientist at [Docsumo](https://www.docsumo.com/about), where I focused on extracting unstructured data from documents like inovices, bank statements, and tax forms. My work involved computer vision tasks, such as **table detection, template matching with minimal annotations** and natural language processing tasks such as **topic modeling, name entity recognition, and text classifications**.
 
 I hold a Bachelor's degree in Electronics and Communication Engineering from Pulchowk Campus, IOE, Tribhuvan University, Nepal. During my undergraduate years, I was an active member of the [robotics club at Pulchowk Campus](https://robotics.pcampus.edu.np), where I built robots and represented Nepal in the Asia Pacific Robotics Competition (ABU Robocon).
+
+I am currently seeking internship roles in Data Science and Machine Learning. If you know of any relevant opportunities, I would love to connect!

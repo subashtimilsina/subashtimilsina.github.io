@@ -1,81 +1,95 @@
 ---
 layout: page
-title: project 1
-description: with background image
-img: assets/img/12.jpg
-importance: 1
+title: Quantized Spectrum Cartography via Tensor Decomposition and GANs.
+description: Mutli-dimensional data arrays (Tensors) completion from incomplete and quantized measuremnts using machine learning and deep learning.
+img: assets/img/New_sc_illustration.jpg
+importance: 3
 category: After 2020
-related_publications: true
+related_publications: false
 ---
 
-Every project has a beautiful feature showcase page.
-It's easy to include images in a flexible 3-column grid format.
-Make your photos 1/3, 2/3, or full width.
+## **Introduction**
 
-To give your project a background in the portfolio page, just add the img tag to the front matter like so:
-
-    ---
-    layout: page
-    title: project
-    description: a project with a background image
-    img: /assets/img/12.jpg
-    ---
+Spectrum Cartography, or Radio Map Estimation, is like making a map that shows how strong or weak radio signals (like Wi-Fi or cellular signals) are in different places and different frequency bands. Imagine you're walking around with your phone, and at each spot, you check how good the signal is—maybe it's strong near a tower but weak far away. The goal is to create a full map that shows the signal strength everywhere and different frequency bands, even in places where you didn’t actually measure it.
 
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/1.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
+        {% include figure.liquid loading="eager" path="assets/img/figure4_quantsc.png" title="example image" class="img-fluid rounded z-depth-1" %}
     </div>
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/3.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/5.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
+        {% include figure.liquid loading="eager" path="assets/img/figure2_quantsc.png" title="example image" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
+
+
+## **Applications:**
+  - **Better Coverage:** Helps phone companies figure out where signals are good and where they need to improve, like finding "dead zones."
+  - **Less Interference:** Shows where signals from different sources overlap and might cause problems.
+  - **Network Planning:** Helps decide where to put things like cell towers to give better service.
+
+---
+
+## **Reproducibility:**
+- [Source Code](https://github.com/subashtimilsina/Quantized-Radio-Map-Estimation-BTD-and-DGM)
+- [Paper 1 IEEE ICASSP 2023 (Introduced deep model)](https://ieeexplore.ieee.org/abstract/document/10096058?casa_token=osyD2IS_sfcAAAAA:S7q96S-NCOpvEeK0IAgohCb3lWN3nF8dmAbQualWEQRZGazeubOWpowCeNMI_E29Hnn18ZmtlQ)
+- [Paper 2 IEEE TSP 2023 (Theoretical guarantees and BTD model)](https://ieeexplore.ieee.org/abstract/document/10335642?casa_token=OZLP8v8gUOMAAAAA:xx7jQ-t08FFovgmy0T7SPsOSW4Gpc8q0mfskZWalcycr38ihtmBgwk2A_-wroz5J_V_CcPKr6g)
+- <a href="/assets/pdf/quant_sc.pdf" target="_blank">Download slides</a>
+
+---
+# **Overview:**
+Mathematically, the problem is to **recover the high-dimensional tensor from few measurements.**
+<div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid loading="eager" path="assets/img/figure3_quantsc.png" title="example image" class="img-fluid rounded z-depth-1" %}
+</div>
+
 <div class="caption">
-    Caption photos easily. On the left, a road goes through a tunnel. Middle, leaves artistically fall in a hipster photoshoot. Right, in another hipster photoshoot, a lumberjack grasps a handful of pine needles.
+    Spectrum cartography illustration.
 </div>
+
+# **Challenges:**
+- Indoor environment has interference so the power propagation in the space is not smooth i.e. this is called heavy shadowing scenarios. 
+- Handcrafted priors such as low-rank and sparsity prior fails to capture such complex scenarios. This requires complex function, and the obvious choice is to learn the deep neural network.
+- Sending real-valued measurements is not feasible due to communication overhead, limited bandwidth, latency. So, the measurements are quantized
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/5.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
+        {% include figure.liquid loading="eager" path="assets/img/figure1_quantsc.png" title="example image" class="img-fluid rounded z-depth-1" %}
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="eager" path="assets/img/figure5_quantsc.png" title="example image" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
+
+<div class="caption">
+    Shadowing (left), 3-bit quantized measurement (right).
+</div>
+
+# **Methodology**
+
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="eager" path="assets/img/figure6_quantsc.png" title="example image" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
+
+## Maximum Likelihood Formulation with deep generative network
+
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="eager" path="assets/img/figure7_quantsc.png" title="example image" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
+
+## Deep Generative model to model complex data distribution
+
+<div class="row justify-content-sm-center">
+    <div class="col-sm-6 mt-3 mt-md-0">
+        {% include figure.liquid path="assets/img/figure8_quantsc.png" title="example image" class="img-fluid rounded z-depth-1" %}
+    </div>
+    <div class="col-sm-6 mt-3 mt-md-0">
+        {% include figure.liquid path="assets/img/figure9_quantsc.png" title="example image" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
 <div class="caption">
-    This image can also have a caption. It's like magic.
+    Training GAN to generate <b>spatial loss field</b> (SLF), Decomposition model.
 </div>
 
-You can also put regular text between your rows of images, even citations {% cite einstein1950meaning %}.
-Say you wanted to write a bit about your project before you posted the rest of the images.
-You describe how you toiled, sweated, _bled_ for your project, and then... you reveal its glory in the next row of images.
-
-<div class="row justify-content-sm-center">
-    <div class="col-sm-8 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/6.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm-4 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/11.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    You can also have artistically styled 2/3 + 1/3 images, like these.
-</div>
-
-The code is simple.
-Just wrap your images with `<div class="col-sm">` and place them inside `<div class="row">` (read more about the <a href="https://getbootstrap.com/docs/4.4/layout/grid/">Bootstrap Grid</a> system).
-To make images responsive, add `img-fluid` class to each; for rounded corners and shadows use `rounded` and `z-depth-1` classes.
-Here's the code for the last row of images above:
-
-{% raw %}
-
-```html
-<div class="row justify-content-sm-center">
-  <div class="col-sm-8 mt-3 mt-md-0">
-    {% include figure.liquid path="assets/img/6.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-  </div>
-  <div class="col-sm-4 mt-3 mt-md-0">
-    {% include figure.liquid path="assets/img/11.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-  </div>
-</div>
-```
-
-{% endraw %}
