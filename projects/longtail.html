@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Multi-Domain Image Generation for Long-tailed Distributed Data — Subash Timilsina">
+    <meta name="description" content="Long-Tail Class Generation via Content-Style based Transfer Learning — Subash Timilsina">
     <meta name="author" content="Subash Timilsina">
-    <title>Multi-Domain Image Generation — Subash Timilsina</title>
+    <title>Long-Tail Class Generation — Subash Timilsina</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,6 +13,34 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="../style.css">
+
+    <!-- MathJax for math rendering -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                macros: {
+                    bx: '{\\boldsymbol{x}}',
+                    bc: '{\\boldsymbol{c}}',
+                    bs: '{\\boldsymbol{s}}',
+                    bw: '{\\boldsymbol{w}}',
+                    bz: '{\\boldsymbol{z}}',
+                    bg: '{\\boldsymbol{g}}',
+                    bd: '{\\boldsymbol{d}}',
+                    bh: '{\\boldsymbol{h}}',
+                    be: '{\\boldsymbol{e}}',
+                    bP: '{\\mathbb{P}}',
+                    bbE: '{\\mathbb{E}}',
+                    bbR: '{\\mathbb{R}}',
+                    cN: '{\\mathcal{N}}',
+                    cR: '{\\mathcal{R}}',
+                    cW: '{\\mathcal{W}}'
+                }
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <style>
         .project-page {
@@ -43,7 +71,7 @@
             text-align: center;
         }
         .project-page h1 {
-            font-size: 2.6rem;
+            font-size: 2.4rem;
             margin-bottom: 1.2rem;
             text-align: center;
             letter-spacing: -0.015em;
@@ -53,27 +81,23 @@
             justify-content: center;
             margin-bottom: 2.5rem;
         }
-        .project-page .hero-image {
-            width: 100%;
-            margin: 0 0 2.5rem;
-            border: 1px solid var(--hairline);
-            border-radius: 2px;
-            overflow: hidden;
-            background: var(--code-bg);
-        }
-        .project-page .hero-image img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
         .project-page h2 {
             font-size: 1.5rem;
-            margin-top: 2.5rem;
-            margin-bottom: 0.9rem;
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            color: var(--accent);
+            border-bottom: 1px solid var(--hairline);
+            padding-bottom: 0.3rem;
+        }
+        .project-page h3 {
+            font-size: 1.2rem;
+            margin-top: 1.8rem;
+            margin-bottom: 0.6rem;
             font-weight: 700;
         }
         .project-page p {
-            font-size: 1.08rem;
+            font-size: 1.05rem;
             line-height: 1.75;
             margin-bottom: 1rem;
             color: var(--text-color);
@@ -82,20 +106,104 @@
             margin: 0 0 1rem 1.5rem;
         }
         .project-page li {
-            font-size: 1.08rem;
+            font-size: 1.05rem;
             line-height: 1.7;
             margin-bottom: 0.4rem;
         }
-        .project-page .image-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin: 1.5rem 0;
+        .project-page figure {
+            margin: 1.8rem 0;
+            text-align: center;
         }
-        .project-page .image-row img {
+        .project-page figure img {
             width: 100%;
+            max-width: 100%;
             border: 1px solid var(--hairline);
             border-radius: 2px;
+            background: #fff;
+            padding: 0.4rem;
+        }
+        .project-page figcaption {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            font-style: italic;
+            margin-top: 0.7rem;
+            line-height: 1.5;
+            text-align: center;
+        }
+        .project-page .image-row {
+            display: grid;
+            grid-template-columns: 38fr 58fr;
+            gap: 1.2rem;
+            margin: 1.8rem 0;
+        }
+        .project-page .image-row figure { margin: 0; }
+        .project-page .image-row img { width: 100%; }
+        @media (max-width: 720px) {
+            .project-page .image-row { grid-template-columns: 1fr; }
+        }
+        .project-page .math-block {
+            background: var(--code-bg);
+            border-left: 3px solid var(--accent-soft);
+            padding: 1rem 1.2rem;
+            margin: 1.4rem 0;
+            border-radius: 2px;
+            font-size: 0.98rem;
+            overflow-x: auto;
+        }
+        .project-page table.results-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.92rem;
+            margin: 1rem 0 0.4rem;
+            font-variant-numeric: tabular-nums;
+        }
+        .project-page table.results-table th,
+        .project-page table.results-table td {
+            border: 1px solid var(--hairline);
+            padding: 0.45rem 0.7rem;
+            text-align: center;
+        }
+        .project-page table.results-table th {
+            background: var(--code-bg);
+            font-weight: 700;
+            color: var(--text-color);
+        }
+        .project-page table.results-table th.method,
+        .project-page table.results-table td.method {
+            text-align: left;
+            font-weight: 600;
+        }
+        .project-page table.results-table td.best {
+            color: var(--accent);
+            font-weight: 700;
+        }
+        .project-page table.results-table td.second {
+            text-decoration: underline;
+        }
+        .project-page table.results-table tbody tr:hover {
+            background: var(--code-bg);
+        }
+        .project-page .table-caption {
+            font-size: 0.92rem;
+            color: var(--text-light);
+            font-style: italic;
+            margin: 0.4rem 0 1.5rem;
+            text-align: center;
+        }
+        .project-page .table-wrap {
+            overflow-x: auto;
+            margin: 1.2rem 0 0;
+        }
+        .project-page .key-insight {
+            border: 1px solid var(--hairline);
+            background: var(--code-bg);
+            padding: 1rem 1.2rem;
+            border-radius: 2px;
+            margin: 1.5rem 0;
+            font-size: 1rem;
+        }
+        .project-page .key-insight strong {
+            color: var(--accent);
         }
         .project-page .external-links {
             display: flex;
@@ -104,8 +212,40 @@
             justify-content: center;
             margin-bottom: 2rem;
         }
-        @media (max-width: 720px) {
-            .project-page .image-row { grid-template-columns: 1fr; }
+        .project-page .authors {
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--text-light);
+            margin: 2rem 0 1rem;
+            padding-top: 1.2rem;
+            border-top: 1px solid var(--hairline);
+            line-height: 1.6;
+        }
+        .project-page .authors strong {
+            color: var(--text-color);
+        }
+        .project-page .references ol {
+            margin: 0.5rem 0 0 1.2rem;
+            padding: 0;
+        }
+        .project-page .references li {
+            font-size: 0.92rem;
+            line-height: 1.6;
+            color: var(--text-light);
+            margin-bottom: 0.55rem;
+        }
+        .project-page .references li a {
+            color: var(--accent-soft);
+            word-break: break-all;
+        }
+        .project-page sup a {
+            color: var(--accent-soft);
+            font-size: 0.72rem;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .project-page sup a:hover {
+            color: var(--accent);
         }
     </style>
 </head>
@@ -135,39 +275,446 @@
         <a href="../index.html#projects" class="back-link">← Back to all projects</a>
 
         <p class="project-meta">Project · Generative Models</p>
-        <h1>Multi-Domain Image Generation for Long-tailed Distributed Data</h1>
+        <h1>Long-Tail Class Generation via Content-Style based Transfer Learning</h1>
         <div class="project-tags">
             <span class="project-tag">Generative Models</span>
             <span class="project-tag">Long-tailed Learning</span>
+            <span class="project-tag">Transfer Learning</span>
+            <span class="project-tag">Content-Style Generative Model</span>
+            <span class="project-tag">Conditional Image Generation</span>
         </div>
 
-        <div class="hero-image">
-            <img src="../assets/images/projects/longtail.jpg" alt="Long-tailed distribution illustration">
-        </div>
 
-        <h2>Overview</h2>
-        <p>
-            Real-world image datasets are usually long-tailed — a small set of "head" classes contain the bulk of the
-            samples while many "tail" classes have very few examples. Generative models trained naively on such data
-            collapse the tail classes and produce poor diversity for under-represented categories.
-        </p>
-        <p>
-            This project explores generative models that explicitly leverage <strong>cross-domain information</strong>
-            to fill in the long tail — borrowing structure from related domains (or auxiliary modalities) to synthesise
-            diverse, faithful samples for rare classes.
-        </p>
+        <h2>The Problem</h2>
 
-        <h2>Goals</h2>
+        <p>
+            Real-world image datasets are almost never balanced. A handful of <em>head</em> classes carry the bulk of
+            the samples, while a long list of <em>tail</em> classes have only a few. When a class-conditional generative
+            model — e.g. a conditional GAN (cGAN) — is trained on such data, two failure modes appear:
+        </p>
         <ul>
-            <li>Identify shared structure between head and tail classes (or across domains).</li>
-            <li>Use that shared structure to regularise the generator on under-represented classes.</li>
-            <li>Quantify improvements in diversity and downstream classification on tail classes.</li>
+            <li><strong>Mode collapse on tail classes.</strong> The generator produces near-identical outputs for any
+                tail-class condition; diversity vanishes.</li>
+            <li><strong>Drop in fidelity.</strong> Tail samples look distorted or unrealistic, even when head-class
+                samples look great.</li>
         </ul>
 
-        <h2>Status</h2>
         <p>
-            Work in progress. More details, results, and code coming soon.
+            The natural way out is <strong>knowledge transfer from head to tail</strong>: similar classes (e.g. dog
+            breeds) share most of their generative process, so the few samples we have for a tail class should benefit
+            from the abundant samples of nearby head classes. Most prior work — GSR-GAN<sup><a href="#ref2">[2]</a></sup>,
+            Transitional GAN<sup><a href="#ref3">[3]</a></sup>,
+            Noisy-Twin<sup><a href="#ref4">[4]</a></sup>,
+            UTLO<sup><a href="#ref5">[5]</a></sup> — implements this idea with heuristics on architecture,
+            regularization, or training schedules.
+            We instead ground the knowledge transfer from head to tail transfer in a principled <strong>content-style generative model</strong> that explictly separates what is shared across all classes (content) and what is class-specific.
         </p>
+
+        <h3>Setup</h3>
+        <p>
+            We have $N$ classes split into $M$ head classes (abundant data) and $N-M$ tail classes (scarce data).
+            For class $n \in [N]$ we observe a dataset $\{ \bx_i^{(n)} \}_{i=1}^{D^{(n)}}$ with $D^{(n)}$ samples.
+            The imbalance ratio is $\rho = D^{(1)} / D^{(N)}$. Our goal is to learn a single generative model that
+            produces high-fidelity, diverse samples for <em>every</em> class — including those with only a few real
+            images.
+        </p>
+
+
+        <h2>Proposed Formulation</h2>
+
+        <h3>Content–Style Generative Model</h3>
+
+        <p>
+            We model every image as a composition of two latent factors:
+        </p>
+        <ul>
+            <li>The <strong>content</strong> $\bc$ — semantics shared across all classes (e.g., the pose of an animal
+                face, the layout of a flower).</li>
+            <li>The <strong>style</strong> $\bs^{(n)}$ — class-specific appearance (e.g., fur texture for a particular
+                breed, petal color for a particular flower species).</li>
+        </ul>
+
+        <div class="math-block">
+        $$
+        \bx^{(n)} = \bg(\bc, \bs^{(n)}), \quad \bc \sim \bP_{\bc}, \quad \bs^{(n)} \sim \bP_{\bs^{(n)}},
+        $$
+        </div>
+
+        <p>
+            where $\bg : \mathcal{C}\times\mathcal{S}^{(n)} \to \mathcal{X}^{(n)}$ is a (smooth) bijection. To make the
+            two latent distributions trainable, we transport standard Gaussians through learnable encoders:
+        </p>
+
+        <div class="math-block">
+        $$
+        \bc = \be_{\rm C}(\bz_{\rm C}), \qquad \bs^{(n)} = \be_{\rm S}(\bz_{\rm S}, \bw_n), \qquad
+        \bz_{\rm C}\sim\cN(\boldsymbol{0},\boldsymbol{I}), \quad \bz_{\rm S}\sim\cN(\boldsymbol{0},\boldsymbol{I}).
+        $$
+        </div>
+
+        <p>
+            The <strong>same</strong> style function $\be_{\rm S}$ is reused across all classes; the only thing that
+            distinguishes class $n$ is its embedding $\bw_n$. Crucially, we ask $\be_{\rm S}$ to be <em>smooth</em>
+            in $\bw$:
+        </p>
+
+        <div class="math-block">
+        $$
+        \big\| \be_{\rm S}(\bz_{\rm S}, \bw_i) - \be_{\rm S}(\bz_{\rm S}, \bw_j) \big\|_2 \;\leq\; L\,\| \bw_i - \bw_j \|_2,
+        \qquad \forall \bw_i, \bw_j \in \widetilde{\cW}.
+        $$
+        </div>
+
+        <p>
+            This Lipschitz constraint is the formal expression of "tail classes look similar to nearby head classes":
+            small movements in class embedding space produce small changes in generated style for a given random noise $\bz_{\rm S}$. It is what enables transfer
+            from head to tail.
+        </p>
+
+        <h3>Why Smoothness, and why sharing content and style encoder with the head classes?</h3>
+
+        <p>
+            With the shared modeling and the smoothness constraint, the head classes alone determine $\be_{\rm C}(\cdot)$ and $\be_{\rm S}(\cdot, \bw_h)$ for $h\in[M]$,
+            since they have enough data for distribution matching. Smoothness then help learn $\bw_h$ for the tail classes pulling it closer to the head classes. This also means style space $\mathcal{S}$ is connected and smooth across all classes.
+        </p>
+
+
+        <h3>Conceptual Loss</h3>
+
+        <p>
+            We use the Generative Adversarial Network (GAN) to instantiate the content-style generative model.
+            Combining the GAN distribution-matching with the smoothness constraint and an embedding encoder $\bh$ that
+            ties latent embeddings to images, the conceptual loss is:
+        </p>
+
+        <div class="math-block">
+        $$
+        \begin{aligned}
+        \min_{\bg,\be_{\rm C},\be_{\rm S},\bw_n}\;\max_{\bd}\quad
+        & \sum_{n=1}^{M} \bbE\!\left[ \log \bd(\bx^{(n)}) + \log\!\big(1 - \bd(\bg(\be_{\rm C}(\bz_{\rm C}),
+            \be_{\rm S}(\bz_{\rm S},\bw_n)))\big) \right] \\
+        \text{s.t.}\quad
+        & \be_{\rm S}(\bz_{\rm S},\,\cdot) \text{ is smooth in } \bw_n.
+        \end{aligned}
+        $$
+        </div>
+
+        <h3>Practical Implementation</h3>
+
+        <p>
+            For training we replace the hard smoothness constraint with a soft Jacobian regularizer:
+        </p>
+
+        <div class="math-block">
+        $$
+        \cR(\be_{\rm S}) \;=\; \sum_{n=1}^{N} \bbE_{\bz_{\rm S}}\Big[\;
+        \big\| J_{\be_{\rm S}}(\bz_{\rm S}, \bw_n) \big\|_{\rm F}\;\Big],
+        $$
+        </div>
+
+        <p>
+            where $J_{\be_{\rm S}}$ is the Jacobian of $\be_{\rm S}$ with respect to $\bw$. The Jacobian Frobenius
+            norm directly upper-bounds the Lipschitz constant. To avoid materializing a full Jacobian, we use a
+            cheap finite-difference estimate:
+        </p>
+
+        <div class="math-block">
+        $$
+        \big\| J_{\be_{\rm S}}(\bz_{\rm S},\bw_n) \big\|_{\rm F}
+        \;\approx\;
+        \frac{\| \be_{\rm S}(\bz_{\rm S},\bw_n) \;-\; \be_{\rm S}(\bz_{\rm S},\bw_n + \epsilon\boldsymbol{\delta}) \|_2}{\delta},
+        \qquad \boldsymbol{\delta}\sim\cN(\boldsymbol{0},\boldsymbol{I}),\;\epsilon\in[0,1].
+        $$
+        </div>
+
+        <p>
+            The full training objective is the cGAN loss <em>plus</em> $\lambda_j\,\cR(\be_{\rm S})$. We use the
+            StyleGAN2-ADA<sup><a href="#ref1">[1]</a></sup> backbone for $\bg,\bd$ and two separate mapping networks for $\be_{\rm C}$ and $\be_{\rm S}$.
+        </p>
+
+
+        <h2>Visualizing What the Model Learns — Does the Model Actually Recover Tail Classes?</h2>
+
+        <p>
+            With identifiable content and style, we can hold the content noise $\bz_{\rm C}$ fixed and sweep across
+            class embeddings to inspect how style varies. The figures below verify the theorem qualitatively: the same
+            content (pose, layout) is preserved while only style (texture, color, breed) changes across classes —
+            including tail classes that had only 2–4 real samples.
+        </p>
+
+        <div class="image-row">
+            <figure>
+                <img src="../assets/images/projects/longtail/flower_content_style.png"
+                     alt="Flowers-LT content–style sweep">
+                <figcaption>(a) Flowers-LT. Tail classes (top to bottom) had only 4, 2, and 2 real samples.</figcaption>
+            </figure>
+            <figure>
+                <img src="../assets/images/projects/longtail/animalfaces_content_style.png"
+                     alt="AnimalFaces-LT content–style sweep">
+                <figcaption>(b) AnimalFaces-LT content–style decomposition.</figcaption>
+            </figure>
+        </div>
+        <p class="table-caption">
+            Figure&nbsp;1. Validation of the identifiability theorem: a fixed $\bz_{\rm C}$ across all images yields
+            consistent content while style varies smoothly with the class embedding $\bw_n$.
+        </p>
+
+        <figure>
+            <img src="../assets/images/projects/longtail/animalfaces_content_demo.jpg"
+                 alt="AnimalFaces-LT generation samples">
+            <figcaption>
+                Figure&nbsp;2. Qualitative results on AnimalFaces-LT. Each <strong>column uses the same style noise vector</strong>  but a
+                different class embedding and each <strong>row uses the same content noise vector</strong>. Our method produces visibly diverse content <em>and</em> style for both
+                head and tail classes, while baselines collapse on the tail.
+            </figcaption>
+        </figure>
+
+
+        <h2>Results</h2>
+
+        <h3>Datasets</h3>
+        <p>
+            We evaluate on four widely used long-tailed benchmarks. Tail-class size is what matters most — Flowers-LT
+            for instance has tail classes with as few as 2 images.
+        </p>
+
+        <div class="table-wrap">
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th class="method">Dataset</th>
+                        <th>$N$</th>
+                        <th>Resolution</th>
+                        <th>$\rho$</th>
+                        <th>$N-M$ (tail)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="method">AnimalFaces-LT</td><td>20</td><td>64 × 64</td><td>25</td><td>10</td></tr>
+                    <tr><td class="method">CIFAR100-LT</td><td>100</td><td>32 × 32</td><td>100</td><td>30</td></tr>
+                    <tr><td class="method">CIFAR10-LT</td><td>10</td><td>32 × 32</td><td>100</td><td>4</td></tr>
+                    <tr><td class="method">Flowers-LT</td><td>102</td><td>128 × 128</td><td>100</td><td>52</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="table-caption">Table&nbsp;1. Long-tailed benchmark statistics. $\rho$ is the head-to-tail ratio.</p>
+
+        <h3>Metrics</h3>
+        <p>
+            FID and KID applied to a long-tailed dataset are dominated by the head classes and can hide tail-class
+            failure. Following UTLO<sup><a href="#ref5">[5]</a></sup>, we report:
+        </p>
+        <ul>
+            <li><strong>FID-few / KID-few</strong> — computed against an <em>equal</em> number of real images per tail
+                class, isolating tail-class quality.</li>
+            <li><strong>FID-all / KID-all</strong> — standard scores over the entire dataset (50k generated images).</li>
+        </ul>
+
+        <h3>Table 2 — FID-few and FID-all</h3>
+
+        <div class="table-wrap">
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th class="method" rowspan="2">Method</th>
+                        <th colspan="2">AnimalFaces-LT</th>
+                        <th colspan="2">CIFAR100-LT</th>
+                        <th colspan="2">CIFAR10-LT</th>
+                        <th colspan="2">Flowers-LT</th>
+                    </tr>
+                    <tr>
+                        <th>FID-few</th><th>FID-all</th>
+                        <th>FID-few</th><th>FID-all</th>
+                        <th>FID-few</th><th>FID-all</th>
+                        <th>FID-few</th><th>FID-all</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="method">StyleGAN2-ADA</td>
+                        <td>123.4</td><td>79.1</td>
+                        <td>28.5</td><td>12.6</td>
+                        <td>23.0</td><td>9.1</td>
+                        <td>19.0</td><td>12.3</td>
+                    </tr>
+                    <tr>
+                        <td class="method">GSR</td>
+                        <td>128.9</td><td>87.5</td>
+                        <td>30.3</td><td>15.9</td>
+                        <td>20.1</td><td>8.9</td>
+                        <td>25.9</td><td>16.2</td>
+                    </tr>
+                    <tr>
+                        <td class="method">Transitional</td>
+                        <td>69.6</td><td>35.5</td>
+                        <td>26.9</td><td>11.2</td>
+                        <td>21.2</td><td>8.7</td>
+                        <td>24.7</td><td>14.1</td>
+                    </tr>
+                    <tr>
+                        <td class="method">Noisy-Twin</td>
+                        <td>55.7</td><td>34.2</td>
+                        <td class="second">26.8</td><td class="second">10.3</td>
+                        <td class="second">18.7</td><td>8.7</td>
+                        <td>20.6</td><td>11.5</td>
+                    </tr>
+                    <tr>
+                        <td class="method">UTLO</td>
+                        <td class="second">50.7</td><td class="second">29.4</td>
+                        <td>27.5</td><td>11.7</td>
+                        <td>19.2</td><td class="second">8.6</td>
+                        <td class="second">17.3</td><td class="second">10.1</td>
+                    </tr>
+                    <tr>
+                        <td class="method">Proposed</td>
+                        <td class="best">42.4</td><td class="best">25.3</td>
+                        <td class="best">24.3</td><td class="best">8.7</td>
+                        <td class="best">17.3</td><td class="best">7.3</td>
+                        <td class="best">16.7</td><td class="best">10.1</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="table-caption">
+            Table&nbsp;2. FID-few and FID-all (lower is better) across four datasets. <span style="color:var(--accent);
+            font-weight:700;">Bold</span> = best, <span style="text-decoration:underline;">underline</span> = second.
+        </p>
+
+        <h3>Table 3 — KID-few and KID-all (× 10³)</h3>
+
+        <div class="table-wrap">
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th class="method" rowspan="2">Method</th>
+                        <th colspan="2">AnimalFaces-LT</th>
+                        <th colspan="2">CIFAR100-LT</th>
+                        <th colspan="2">CIFAR10-LT</th>
+                        <th colspan="2">Flowers-LT</th>
+                    </tr>
+                    <tr>
+                        <th>KID-few</th><th>KID-all</th>
+                        <th>KID-few</th><th>KID-all</th>
+                        <th>KID-few</th><th>KID-all</th>
+                        <th>KID-few</th><th>KID-all</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="method">StyleGAN2-ADA</td>
+                        <td>54.7</td><td>30.8</td>
+                        <td>12.3</td><td>5.3</td>
+                        <td>9.2</td><td>3.3</td>
+                        <td class="second">3.3</td><td>2.7</td>
+                    </tr>
+                    <tr>
+                        <td class="method">GSR</td>
+                        <td>32.6</td><td>23.3</td>
+                        <td>17.2</td><td>7.6</td>
+                        <td>7.9</td><td>4.2</td>
+                        <td>7.4</td><td>5.7</td>
+                    </tr>
+                    <tr>
+                        <td class="method">Transitional</td>
+                        <td>23.0</td><td class="second">11.8</td>
+                        <td>11.9</td><td>5.3</td>
+                        <td>8.5</td><td>4.1</td>
+                        <td>7.2</td><td>4.3</td>
+                    </tr>
+                    <tr>
+                        <td class="method">Noisy-Twin</td>
+                        <td>21.2</td><td>13.6</td>
+                        <td>11.5</td><td class="second">4.3</td>
+                        <td class="second">6.0</td><td class="second">2.3</td>
+                        <td>5.1</td><td>3.5</td>
+                    </tr>
+                    <tr>
+                        <td class="method">UTLO</td>
+                        <td class="second">19.1</td><td>12.1</td>
+                        <td class="second">10.5</td><td>5.8</td>
+                        <td>8.2</td><td>3.4</td>
+                        <td>3.7</td><td class="second">2.7</td>
+                    </tr>
+                    <tr>
+                        <td class="method">Proposed</td>
+                        <td class="best">10.8</td><td class="best">7.4</td>
+                        <td class="best">9.1</td><td class="best">2.9</td>
+                        <td class="best">5.8</td><td class="best">2.0</td>
+                        <td class="best">2.5</td><td class="best">2.4</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="table-caption">
+            Table&nbsp;3. KID-few and KID-all (lower is better, ×10³).
+        </p>
+
+        <h3>What the Numbers Say</h3>
+        <ul>
+            <li><strong>Best on every dataset, on every metric.</strong> Proposed wins both the
+                tail-focused (-few) and full-dataset (-all) variants of FID and KID across all four benchmarks.</li>
+            <li><strong>Largest gain on tail classes.</strong> On AnimalFaces-LT — the dataset with the smallest
+                resolution-adjusted images and a real (not synthetic) imbalance — KID-few drops from 19.1 (UTLO) to
+                10.8, nearly halving the previous best.</li>
+            <li><strong>Tail improvements don't cost head fidelity.</strong> Proposed also has the lowest FID-all and
+                KID-all, meaning the model isn't trading head-class quality for tail-class diversity — the
+                content–style decomposition lets it improve both.</li>
+        </ul>
+
+
+        <h2>Summary</h2>
+
+        <p>
+            Long-tail class generation is hard because a few tail samples can't anchor distribution matching by
+            themselves. By <em>modeling</em> images as a content–style decomposition with a smooth, class-conditioned
+            style function, we get a single principled heuristic based on a content-style generative model that is easy to implement. In practice, a simple
+            Jacobian-norm regularizer on the style mapping network implemented with a finite difference turns this into a measurable improvement: state-of-the-art FID and KID on AnimalFaces-LT,
+            CIFAR-LT, and Flowers-LT.
+        </p>
+
+        <div class="references">
+            <h2>References</h2>
+            <ol>
+                <li id="ref1">
+                    T. Karras, M. Aittala, J. Hellsten, S. Laine, J. Lehtinen, and T. Aila, 
+                    <em>Training generative adversarial networks with limited data (StyleGAN2-ADA).</em>
+                    NeurIPS 2020.
+                    <a href="https://arxiv.org/abs/2006.06676" target="_blank">arXiv:2006.06676</a>
+                </li>
+                <li id="ref2">
+                    H. Rangwani, N. Jaswani, T. Karmali, V. Jampani, and R. V. Babu,
+                    <em>Improving gans for long tailed data through group spectral regularization (GSR-GAN).</em>
+                    ECCV 2022.
+                    <a href="https://arxiv.org/abs/2208.09932" target="_blank">arXiv:2208.09932</a>
+                </li>
+                <li id="ref3">
+                    M. Shahbazi, M. Danelljan, D. P. Paudel, and L. Van Gool,
+                    <em>Collapse by conditioning: Training class-conditional gans with limited data (Transitional GAN).</em>
+                    ECCV 2022.
+                    <a href="https://arxiv.org/abs/2201.06578" target="_blank">arXiv:2201.06578</a>
+                </li>
+                <li id="ref4">
+                    H. Rangwani, L. Bansal, K. Sharma, T. Karmali, V. Jampani, and R. V. Babu,
+                    <em>“Noisytwins: Class-consistent and diverse image generation through stylegans</em>
+                    ECCV 2022.
+                    <a href="https://arxiv.org/abs/2304.05866" target="_blank">arXiv:2304.05866</a>
+                </li>
+                <li id="ref5">
+                    S. Khorram, M. Jiang, M. Shahbazi, M. H. Danesh, and L. Fuxin,
+                    <em>Taming the tail in class-conditional gans: Knowledge sharing via unconditional training at lower resolutions (UTLO).</em>
+                    ICML 2023.
+                    <a href="https://arxiv.org/abs/2402.17065" target="_blank">arXiv:2402.17065</a>
+                </li>
+            </ol>
+        </div>
+
+        <p class="authors">
+            Project by: <strong>Subash Timilsina</strong>, Sagar Shrestha, Xiao Fu.
+        </p>
+
+        <div class="external-links">
+            <a href="../index.html#projects" class="pub-link">Back to projects</a>
+        </div>
     </article>
 
     <footer class="footer">

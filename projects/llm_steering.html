@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Autonomous Mecanum Drive Robot — ABU Robocon 2018 — Subash Timilsina">
+    <meta name="description" content="Language Models Steering via Content–Style Modeling — Subash Timilsina">
     <meta name="author" content="Subash Timilsina">
-    <title>Autonomous Mecanum Drive Robot — Subash Timilsina</title>
+    <title>LLM Steering via Content–Style Modeling — Subash Timilsina</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,6 +13,16 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="../style.css">
+
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <style>
         .project-page {
@@ -43,7 +53,7 @@
             text-align: center;
         }
         .project-page h1 {
-            font-size: 2.6rem;
+            font-size: 2.4rem;
             margin-bottom: 1.2rem;
             text-align: center;
             letter-spacing: -0.015em;
@@ -53,74 +63,79 @@
             justify-content: center;
             margin-bottom: 2.5rem;
         }
-        .project-page .hero-image {
-            width: 100%;
-            margin: 0 0 2.5rem;
-            border: 1px solid var(--hairline);
-            border-radius: 2px;
-            overflow: hidden;
-            background: var(--code-bg);
-        }
-        .project-page .hero-image img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
         .project-page h2 {
             font-size: 1.5rem;
-            margin-top: 2.5rem;
-            margin-bottom: 0.9rem;
+            margin-top: 3rem;
+            margin-bottom: 1rem;
             font-weight: 700;
+            color: var(--accent);
+            border-bottom: 1px solid var(--hairline);
+            padding-bottom: 0.3rem;
         }
         .project-page p {
-            font-size: 1.08rem;
+            font-size: 1.05rem;
             line-height: 1.75;
             margin-bottom: 1rem;
             color: var(--text-color);
         }
-        .project-page ul, .project-page ol {
+        .project-page ul {
             margin: 0 0 1rem 1.5rem;
         }
         .project-page li {
-            font-size: 1.08rem;
+            font-size: 1.05rem;
             line-height: 1.7;
-            margin-bottom: 0.4rem;
+            margin-bottom: 0.6rem;
         }
-        .project-page .image-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin: 1.5rem 0;
+        .project-page li a {
+            color: var(--accent-soft);
+            word-break: break-all;
         }
-        .project-page .image-row figure { margin: 0; }
-        .project-page .image-row img {
+        .project-page li a:hover {
+            color: var(--accent);
+        }
+        .project-page figure {
+            margin: 1.8rem 0 2.2rem;
+            text-align: center;
+        }
+        .project-page figure img {
             width: 100%;
+            max-width: 100%;
             border: 1px solid var(--hairline);
             border-radius: 2px;
-            display: block;
+            background: #fff;
+            padding: 0.4rem;
         }
         .project-page figcaption {
             font-size: 0.9rem;
             color: var(--text-light);
             font-style: italic;
-            margin-top: 0.4rem;
+            margin-top: 0.7rem;
+            line-height: 1.5;
             text-align: center;
         }
-        .project-page .video-wrapper {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            margin: 1.5rem 0;
+        .project-page .status-callout {
             border: 1px solid var(--hairline);
+            background: var(--code-bg);
+            padding: 1rem 1.2rem;
             border-radius: 2px;
-            overflow: hidden;
+            margin: 1.5rem 0;
+            font-size: 1rem;
+            line-height: 1.7;
         }
-        .project-page .video-wrapper iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        .project-page .status-callout strong {
+            color: var(--accent);
+        }
+        .project-page .authors {
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--text-light);
+            margin: 2rem 0 1rem;
+            padding-top: 1.2rem;
+            border-top: 1px solid var(--hairline);
+            line-height: 1.6;
+        }
+        .project-page .authors strong {
+            color: var(--text-color);
         }
         .project-page .external-links {
             display: flex;
@@ -128,9 +143,6 @@
             flex-wrap: wrap;
             justify-content: center;
             margin-bottom: 2rem;
-        }
-        @media (max-width: 720px) {
-            .project-page .image-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -159,56 +171,80 @@
     <article class="project-page">
         <a href="../index.html#projects" class="back-link">← Back to all projects</a>
 
-        <p class="project-meta">Project · ABU Robocon 2018, Vietnam</p>
-        <h1>Autonomous Mecanum Drive Robot with Multi-sensor Navigation</h1>
+        <p class="project-meta">Project · LLM Alignment</p>
+        <h1>LLM Steering via Content–Style Modeling</h1>
         <div class="project-tags">
-            <span class="project-tag">Robotics</span>
-            <span class="project-tag">Sensor Fusion</span>
-            <span class="project-tag">ABU Robocon</span>
+            <span class="project-tag">LLM Steering</span>
+            <span class="project-tag">Activation Engineering</span>
+            <span class="project-tag">Content–Style Modeling</span>
+            <span class="project-tag">Toxicity</span>
+            <span class="project-tag">Sycophancy</span>
         </div>
 
-        <div class="hero-image">
-            <img src="../assets/images/projects/robocon_robot.jpg" alt="Autonomous mecanum drive robot">
+        <figure>
+            <img src="../assets/images/projects/llm_steering/llm_activation_steering.png"
+                 alt="Content–Style decomposition for LLM activations">
+            <figcaption>source: chatgpt</figcaption>
+        </figure>
+
+        <div class="status-callout">
+            <strong>Status:</strong> ongoing research project.
         </div>
 
-        <h2>Task</h2>
+
+        <h2>What I'm Working On</h2>
+
         <p>
-            Built for the <a href="https://en.wikipedia.org/wiki/ABU_Robocon" target="_blank" rel="noopener">ABU Robocon
-            2018</a> competition held in Vietnam. The contest required teams to design autonomous and manual robots that
-            could complete a sequence of throwing and tossing tasks under tight time limits.
+            I'm developing a lightweight <strong>content–style activation-steering</strong> method that reduces
+            <em>toxic</em> and <em>sycophantic</em> generations from large language models — without sacrificing the
+            semantic meaning of the original response.
         </p>
 
-        <div class="video-wrapper">
-            <iframe src="https://www.youtube.com/embed/YCIg3lU7yto"
-                    title="ABU Robocon 2018 task video"
-                    frameborder="0"
-                    allow="autoplay; encrypted-media; picture-in-picture"
-                    allowfullscreen></iframe>
-        </div>
-
-        <h2>My Role</h2>
         <p>
-            I worked primarily on the <strong>navigation and mechanisms</strong> of the autonomous robot — designing the
-            mecanum-drive base for omnidirectional motion, integrating multiple sensors (encoders, IMU, ultrasonic) for
-            robust closed-loop motion, and tuning the control loops for accurate positioning on the field.
+            The core idea is to factorize an LLM's internal activation $\boldsymbol{a} \in \mathbb{R}^d$ into a
+            <strong>content</strong> component $\boldsymbol{c}$ — what the model is trying to say — and a
+            <strong>style</strong> component $\boldsymbol{s}$ — how it is being expressed. Toxicity and sycophancy show
+            up almost entirely in <em>style</em>; reasoning, intent, and topical content live in <em>content</em>.
+            Steering the style sub-space at inference time should therefore flip the response from negative to
+            positive expression while leaving the underlying meaning untouched.
         </p>
+
+
+        <h2>Datasets</h2>
 
         <ul>
-            <li>Mecanum-wheel kinematics and inverse kinematics for omnidirectional drive.</li>
-            <li>Sensor fusion of encoders, IMU, and field markers for pose estimation.</li>
-            <li>State-machine controller for sequencing the autonomous task pipeline.</li>
+            <li>
+                <strong>RealToxicityPrompts</strong> (Allen AI, 2020) —
+                <a href="https://huggingface.co/datasets/allenai/real-toxicity-prompts" target="_blank">huggingface.co/datasets/allenai/real-toxicity-prompts</a>.
+                ~100K naturally occurring English sentence prefixes scraped from the web, each annotated with
+                Perspective-API toxicity scores (toxicity, profanity, identity-attack, etc.). The standard benchmark
+                for measuring how often an LLM produces toxic continuations from neutral or borderline prompts.
+            </li>
+            <li>
+                <strong>Sycophancy</strong> (EleutherAI, derived from Anthropic's evals) —
+                <a href="https://huggingface.co/datasets/EleutherAI/sycophancy" target="_blank">huggingface.co/datasets/EleutherAI/sycophancy</a>.
+                ~30K multiple-choice prompts where a fictional persona states an opinion and asks the model to agree
+                or disagree. The dataset isolates whether the model bends its answer to match the user's stated view
+                (sycophancy) instead of giving a calibrated answer.
+            </li>
         </ul>
 
-        <h2>Glimpses</h2>
-        <div class="image-row">
-            <figure>
-                <img src="../assets/images/projects/robocon_robot.jpg" alt="The robot I worked on">
-                <figcaption>The robot I worked on (autonomous robot).</figcaption>
-            </figure>
-            <figure>
-                <img src="../assets/images/projects/robocon_team.jpg" alt="Team photo at ABU Robocon 2018">
-                <figcaption>Our team at ABU Robocon 2018, Vietnam.</figcaption>
-            </figure>
+
+        <h2>Models I'm Steering</h2>
+
+        <ul>
+            <li><strong>Llama 3.1 8B</strong> — modern instruction-tuned open model.</li>
+            <li><strong>Pythia-12B</strong> — fully-open base model with public training data, useful for clean
+                ablations on a non-aligned starting point.</li>
+        </ul>
+
+
+        <p class="authors">
+            Project by: <strong>Subash Timilsina</strong>.
+        </p>
+
+        <div class="external-links">
+            <a href="../index.html#projects" class="pub-link">Back to projects</a>
         </div>
     </article>
 
