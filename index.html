@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="The personal academic website of Subash Timilsina - PhD Candidate in Computer Science at Oregon State University">
+    <meta name="author" content="Subash Timilsina">
+    <title>Subash Timilsina - Computer Science PhD Candidate</title>
+
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300..900;1,300..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#home" class="nav-brand">Subash Timilsina</a>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="#about" class="nav-link">About</a></li>
+                <li class="nav-item"><a href="#research" class="nav-link">Research</a></li>
+                <li class="nav-item"><a href="#projects" class="nav-link">Projects</a></li>
+                <li class="nav-item"><a href="#blogs" class="nav-link">Blogs</a></li>
+                <li class="nav-item"><a href="assets/CV.pdf" class="nav-link" target="_blank">CV</a></li>
+            </ul>
+            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+                <i class="fas fa-moon" id="theme-icon"></i>
+            </button>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Combined Profile & Timeline Section -->
+    <section id="about" class="profile-timeline">
+        <div class="container">
+            <!-- Profile Header -->
+            <div class="profile-header">
+                <div class="profile-image-container">
+                    <img src="assets/subash.jpg" alt="Subash Timilsina" class="profile-image">
+                </div>
+                <div class="profile-info">
+                    <h1 class="profile-name">Subash Timilsina</h1>
+                    <p class="profile-tagline">
+                        PhD in CS with minor in AI |
+                        <a href="https://oregonstate.edu/" target="_blank" rel="noopener">Oregon State University</a>
+                    </p>
+                    <!-- <p class="profile-description">
+                        Ex-Data Scientist at
+                        <a href="https://www.docsumo.com/about" target="_blank" rel="noopener">Docsumo</a>
+                    </p> -->
+                    <p class="profile-description">Actively seeking full-time opportunities in machine learning and AI.</p>
+                    <div class="social-links">
+                        <a href="https://scholar.google.com/citations?user=qjQqWjAAAAAJ"
+                           class="social-link" target="_blank" aria-label="Google Scholar">
+                            <i class="fas fa-graduation-cap"></i>
+                        </a>
+                        <a href="https://github.com/subashtimilsina"
+                           class="social-link" target="_blank" aria-label="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="mailto:subashtimilsina1997@gmail.com" class="social-link" aria-label="Email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/subash442"
+                           class="social-link" target="_blank" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bio -->
+            <div class="bio">
+                <p>
+                    I am a Ph.D. candidate in Computer Science at
+                    <a href="https://oregonstate.edu/" target="_blank" rel="noopener">Oregon State University</a>,
+                    advised by <a href="https://web.engr.oregonstate.edu/~fuxia/" target="_blank" rel="noopener">Dr. Xiao Fu</a>,
+                    with a minor in Artificial Intelligence. My research focuses on machine learning, particularly
+                    <em>controllable generative models</em>, <em>unsupervised and self-supervised representation learning</em>,
+                    <em>multimodal learning</em>, and <em>optimization for AI</em>. I am especially interested in developing
+                    theoretically grounded methods for learning meaningful and identifiable representations from complex,
+                    unpaired, and multimodal data.
+                </p>
+                <p>
+                    My recent work includes <strong>content-style representation learning, identifiable domain transfer,
+                    generative models for inverse problems, and activation-steering methods for improving large language
+                    model behavior</strong>. My research has been published in venues including
+                    <em>NeurIPS, ICML, IEEE TSP, SPL, and ICASSP</em>.
+                </p>
+                <p>
+                    Before starting my Ph.D., I worked as a Data Scientist at
+                    <a href="https://www.docsumo.com/about" target="_blank" rel="noopener">Docsumo</a>,
+                    where I developed computer vision and natural language processing systems for extracting structured
+                    information from financial and business documents such as invoices, bank statements, W2 forms, and
+                    ACORD documents.
+                </p>
+                <p>
+                I'm currently seeking full-time opportunities in machine learning and would love
+                    to connect with researchers, engineers, and teams working on impactful AI/ML problems.
+                </p>
+            </div>
+
+            <!-- Timeline Content -->
+            <h2 class="section-title">Timeline</h2>
+            <ul class="timeline-list">
+                <li class="timeline-entry">
+                    <div class="timeline-marker" aria-hidden="true">
+                        <img class="timeline-logo" src="assets/images/osu_logo.jpeg" alt="OSU logo"/>
+                    </div>
+                    <div class="timeline-content">
+                        <span class="timeline-year">2021 — Present</span>
+                        <p>
+                            PhD in CS at
+                            <a href="https://oregonstate.edu/" target="_blank" rel="noopener">Oregon State University</a>,
+                            advised by <a href="https://web.engr.oregonstate.edu/~fuxia/" target="_blank" rel="noopener">Xiao Fu</a>,
+                            with a minor in Artificial Intelligence. Research in controllable generative models,
+                            unsupervised and self-supervised representation learning, multimodal learning, and
+                            optimization for AI.
+                        </p>
+                    </div>
+                </li>
+
+                <li class="timeline-entry">
+                    <div class="timeline-marker" aria-hidden="true">
+                        <img class="timeline-logo" src="assets/images/docsumo_logo.png" alt="Docsumo logo"/>
+                    </div>
+                    <div class="timeline-content">
+                        <span class="timeline-year">2019 — 2021</span>
+                        <p>
+                            Data Scientist at
+                            <a href="https://www.docsumo.com/about" target="_blank" rel="noopener">Docsumo</a>.
+                            Built computer vision and NLP systems for extracting structured information from financial
+                            and business documents (invoices, bank statements, W2s, ACORD forms). Worked on OCR
+                            pipelines, table detection, template matching, named entity recognition, semantic matching,
+                            and few-shot learning.
+                        </p>
+                    </div>
+                </li>
+
+                <li class="timeline-entry">
+                    <div class="timeline-marker" aria-hidden="true">
+                        <img class="timeline-logo" src="assets/images/ioe_logo.jpeg" alt="IOE logo"/>
+                    </div>
+                    <div class="timeline-content">
+                        <span class="timeline-year">2015 — 2019</span>
+                        <p>
+                            BE in Electronics and Communications Engineering at IOE, Pulchowk Campus, Tribhuvan
+                            University, Nepal. Awarded a fully funded Nepal Government Scholarship.
+                        </p>
+                    </div>
+                </li>
+
+                <li class="timeline-entry">
+                    <div class="timeline-marker" aria-hidden="true">
+                        <img class="timeline-logo" src="assets/images/robotics_club_logo.png" alt="Robotics Club logo"/>
+                    </div>
+                    <div class="timeline-content">
+                        <span class="timeline-year">2016 — 2019</span>
+                        <p>
+                            Member of the
+                            <a href="https://robotics.pcampus.edu.np/" target="_blank" rel="noopener">Robotics Club</a>,
+                            Pulchowk Campus. Represented Nepal in the Asia-Pacific Robotics Competition.
+                        </p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Research Section -->
+    <section id="research" class="research">
+        <div class="container">
+            <h2 class="section-title">Select Publications</h2>
+            <div class="publications">
+
+                <!-- Publication 7 -->
+                <div class="publication-card">
+                    <div class="publication-image">
+                        <img src="assets/paper_figures/content_style_img.png" alt="content Style Learning with Differential Independence">
+                    </div>
+                    <div class="publication-content">
+                        <h3 class="publication-title">Content-Style Identification via Differential Independence</h3>
+                        <p class="publication-authors"><strong>Subash Timilsina</strong>, Hoang-Son Nguyen, Sagar Shrestha, Xiao Fu</p>
+                        <p class="publication-venue">International Conference on Machine Learning (ICML) 2026</p>
+                        <p class="publication-description">
+                            In this paper, we propose a new way to learn content and style representations from unpaired multi-domain data. 
+                            Our key idea is differential independence, which separates content and style by making their local effects on the data manifold orthogonal. 
+                            This condition works even when content and style are statistically dependent and even when the model has a dense Jacobian. 
+                            We also introduce a scalable regularizer and show benefits in counterfactual generation and domain translation.
+                        </p>
+                        <!-- <div class="publication-links">
+                            <a href="https://proceedings.neurips.cc/paper_files/paper/2024/file/e6c967a0e4168df9614a81ed4195ba78-Paper-Conference.pdf" class="pub-link" target="_blank">Paper</a>
+                            <a href="https://github.com/XiaoFuLab/Shared-Component-Analysis" class="pub-link" target="_blank">Code</a>
+                        </div> -->
+                    </div>
+                </div>
+
+
+                <!-- Publication 6 -->
+                <div class="publication-card">
+                    <div class="publication-image">
+                        <img src="assets/paper_figures/udt.png" alt="Domain Translation with Single Sample">
+                    </div>
+                    <div class="publication-content">
+                        <h3 class="publication-title">Domain Transfer Becomes Identifiable via a Single Alignment</h3>
+                        <p class="publication-authors">Sagar Shrestha, <strong>Subash Timilsina</strong>, Hoang-Son Nguyen, Xiao Fu</p>
+                        <p class="publication-venue">International Conference on Machine Learning (ICML) 2026</p>
+                        <p class="publication-description">
+                            In this paper, we study how to learn reliable mappings between source and target domains with minimal supervision. 
+                            We show that, under a sparsity structure, matching distributions plus one paired anchor sample can identify the correct transfer map.
+                             We also introduce a scalable regularizer and validate the method on synthetic and real-world domain transfer tasks.
+                        </p>
+                        <!-- <div class="publication-links">
+                            <a href="https://proceedings.neurips.cc/paper_files/paper/2024/file/e6c967a0e4168df9614a81ed4195ba78-Paper-Conference.pdf" class="pub-link" target="_blank">Paper</a>
+                            <a href="https://github.com/XiaoFuLab/Shared-Component-Analysis" class="pub-link" target="_blank">Code</a>
+                        </div> -->
+                    </div>
+                </div>
+
+                <!-- Publication 5 -->
+                <div class="publication-card">
+                    <div class="publication-image">
+                        <img src="assets/paper_figures/sca.png" alt="Shared Component Analysis">
+                    </div>
+                    <div class="publication-content">
+                        <h3 class="publication-title">Identifiable Shared Component Analysis of Unpaired Multimodal Mixtures</h3>
+                        <p class="publication-authors"><strong>Subash Timilsina</strong>, Sagar Shrestha, Xiao Fu</p>
+                        <p class="publication-venue">Neural Information Processing Systems (NeurIPS) 2024</p>
+                        <p class="publication-description">
+                            In this paper, we study shared representation learning from unaligned multi-modal data. 
+                            We propose a distribution-matching framework that can identify modality-invariant shared components without requiring paired samples. 
+                            Our theory gives mild conditions for identifiability, and experiments on synthetic and real-world datasets support the results.
+                        </p>
+                        <div class="publication-links">
+                            <a href="https://proceedings.neurips.cc/paper_files/paper/2024/file/e6c967a0e4168df9614a81ed4195ba78-Paper-Conference.pdf" class="pub-link" target="_blank">Paper</a>
+                            <a href="https://github.com/XiaoFuLab/Shared-Component-Analysis" class="pub-link" target="_blank">Code</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Publication 4 -->
+                <div class="publication-card">
+                    <div class="publication-image">
+                        <img src="assets/paper_figures/domain_factored.png" alt="Deep Prior Based Spectrum Cartography">
+                    </div>
+                    <div class="publication-content">
+                        <h3 class="publication-title">Domain-Factored Untrained Deep Prior for Spectrum Cartography</h3>
+                        <p class="publication-authors"><strong>Subash Timilsina</strong>, Sagar Shrestha, Xiao Fu</p>
+                        <p class="publication-venue">IEEE Signal Processing Letters (SPL) 2025</p>
+                        <p class="publication-description">
+                            In this paper, we propose a training-free method for reconstructing high-dimensional signals (e.g., radio maps) using untrained neural networks. 
+                            Our approach uses the network architecture and a tensor factorization model using spatio-spectral structure as priors, allowing accurate tensor estimation from limited sensor data without needing a training dataset.
+                        </p>
+                        <div class="publication-links">
+                            <a href="https://ieeexplore.ieee.org/document/11127065" class="pub-link" target="_blank">Paper</a>
+                            <a href="https://github.com/XiaoFuLab/Radio-Map-Estimation-Untrained-Neural-Network" class="pub-link" target="_blank">Code</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Publication 3 -->
+                <div class="publication-card">
+                    <div class="publication-image">
+                        <img src="assets/paper_figures/sc.gif" alt="Quantized Radio Map Estimation">
+                    </div>
+                    <div class="publication-content">
+                        <h3 class="publication-title">Quantized Radio Map Estimation Using Tensor and Deep Generative Models</h3>
+                        <p class="publication-authors"><strong>Subash Timilsina</strong>, Sagar Shrestha, Xiao Fu</p>
+                        <p class="publication-venue">IEEE Transactions on Signal Processing (TSP) 2023</p>
+                        <p class="publication-description">
+                            This paper develops machine learning methods for recovering structured high-dimensional signals from sparse, noisy, and quantized observations. 
+                            By modeling radio maps as low-dimensional tensors, the method can reconstruct useful information even when only limited low-resolution sensor data is available. 
+                            This is relevant to scalable sensing, edge AI, wireless intelligence, and resource-constrained machine learning systems where collecting or transmitting full-resolution data is expensive.
+                        </p>
+                        <div class="publication-links">
+                            <a href="https://ieeexplore.ieee.org/abstract/document/10335642" class="pub-link" target="_blank">Paper</a>
+                            <a href="https://github.com/XiaoFuLab/Quantized-Radio-Map-Estimation-BTD-and-DGM" class="pub-link" target="_blank">Code</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Publication 2 -->
+                <div class="publication-card">
+                    <div class="publication-image">
+                        <img src="assets/paper_figures/quant_dgm.png" alt="Deep Quantized Spectrum Cartography">
+                    </div>
+                    <div class="publication-content">
+                        <h3 class="publication-title">Deep Spectrum Cartography Using Quantized Measurements</h3>
+                        <p class="publication-authors"><strong>Subash Timilsina</strong>, Sagar Shrestha, Xiao Fu</p>
+                        <p class="publication-venue">IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP) 2023</p>
+                        <p class="publication-description">
+                            This project develops machine learning methods for recovering high-dimensional signals from sparse and quantized sensor feedback. 
+                            By combining deep generative priors, random quantization, and maximum likelihood estimation, the method enables accurate reconstruction when full-resolution data is unavailable. 
+                            This is relevant to edge AI, wireless sensing, compressed sensing, and resource-constrained ML systems where communication bandwidth and data quality are limited.
+                        </p>
+                        <div class="publication-links">
+                            <a href="https://ieeexplore.ieee.org/abstract/document/10096058" class="pub-link" target="_blank">Paper</a>
+                            <a href="https://github.com/XiaoFuLab/Quantized-Radio-Map-Estimation-BTD-and-DGM" class="pub-link" target="_blank">Code</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Publication 1 -->
+                <div class="publication-card">
+                    <div class="publication-image">
+                        <img src="assets/paper_figures/ssl.jpg" alt="Sound Source Localization">
+                    </div>
+                    <div class="publication-content">
+                        <h3 class="publication-title">Search Disaster Victims using Sound Source Localization</h3>
+                        <p class="publication-authors">Abhish Khanal, Deepak Chand, Prakash Chaudhary, <strong>Subash Timilsina</strong>, Sanjeeb Prasad Panday, Aman Shakya</p>
+                        <p class="publication-venue">ISCRAM 2020 — International Conference on Information Systems for Crisis Response and Management</p>
+                        <p class="publication-description">
+                            This project combines robotics, signal processing, and machine learning for real-time audio-based localization. 
+                            We built an autonomous robot with an eight-microphone array and used GCC-PHAT for time-delay estimation to identify the direction of sound sources. 
+                            We also developed a VAE-based audio denoiser using spectrogram representations, improving robustness in noisy environments. 
+                            The project is relevant to embodied AI, audio ML, robotics perception, and disaster-response systems.
+                        </p>
+                        <div class="publication-links">
+                            <a href="https://www.idl.iscram.org/files/abhishkhanal/2020/2293_AbhishKhanal_etal2020.pdf" class="pub-link" target="_blank">Paper</a>
+                            <a href="https://github.com/subashtimilsina/Sound-Source-Localization" class="pub-link" target="_blank">Code</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Unpublished Projects Section -->
+    <section id="projects" class="projects">
+        <div class="container">
+            <h2 class="section-title">Projects</h2>
+            <div class="project-grid">
+
+                <a class="project-card" href="projects/llm_steering.html">
+                    <div class="project-image">
+                        <img src="assets/images/projects/llm_steering.png" alt="Content-Style Model for Activation Steering">
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Large Language Model Activation Steering using Content-Style Model</h3>
+                        <p class="project-description">
+                            This project factorizes LLM activations into two parts: content, which captures the semantic meaning of the text, and style,
+                             which captures how the meaning is expressed, such as toxic or non-toxic language. By separating content from style,
+                              the goal is to preserve the original meaning while modifying the expression toward a more desirable representation.
+                        </p>
+                        <div class="project-tags">
+                            <span class="project-tag">Large Language Models</span>
+                            <span class="project-tag">Activation Steering</span>
+                            <span class="project-tag">Controllable Generation</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a class="project-card" href="projects/longtail.html">
+                    <div class="project-image">
+                        <img src="assets/images/projects/longtail.png" alt="Multi-Domain Image Generation for Long-tailed Data">
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Multi-Domain Image Generation for Long-tailed Distributed Data</h3>
+                        <p class="project-description">
+                            Generative model for image classes that have far fewer samples than others, leveraging cross-domain
+                            information to handle long-tailed class distributions generations.
+                        </p>
+                        <div class="project-tags">
+                            <span class="project-tag">Generative Models</span>
+                            <span class="project-tag">Long-tailed Distribution Learning</span>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Blogs Section -->
+    <section id="blogs" class="blogs">
+        <div class="container">
+            <h2 class="section-title">Blogs</h2>
+            <div class="blog-grid">
+
+                <div class="blog-card">
+                    <a class="blog-image" href="blogs/gen_models.html" aria-label="Generative Models">
+                        <img src="assets/images/blogs/dummy.jpeg" alt="">
+                    </a>
+                    <div class="blog-content">
+                        <div class="blog-date">Writing Soon...</div>
+                        <h3 class="blog-title">
+                            <a href="blogs/gen_models.html">Evolution of Generative Models</a>
+                        </h3>
+                        <p class="blog-description">
+                            A brief history of generative models and their evolution.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="blog-card">
+                    <a class="blog-image" href="blogs/dist_matching.html" aria-label="Distribution Matching">
+                        <img src="assets/images/blogs/dummy.jpeg" alt="">
+                    </a>
+                    <div class="blog-content">
+                        <div class="blog-date">Writing Soon...</div>
+                        <h3 class="blog-title">
+                            <a href="blogs/dist_matching.html">How to do distribution matching?</a>
+                        </h3>
+                        <p class="blog-description">
+                            A guide to distribution matching for generative models.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Subash Timilsina. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const body = document.body;
+
+        const currentTheme = localStorage.getItem('theme') || 'light';
+
+        if (currentTheme === 'dark') {
+            body.setAttribute('data-theme', 'dark');
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+
+            if (currentTheme === 'dark') {
+                body.removeAttribute('data-theme');
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+        }));
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>

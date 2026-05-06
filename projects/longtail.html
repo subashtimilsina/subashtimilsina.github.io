@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Multi-Domain Image Generation for Long-tailed Distributed Data — Subash Timilsina">
+    <meta name="author" content="Subash Timilsina">
+    <title>Multi-Domain Image Generation — Subash Timilsina</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300..900;1,300..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../style.css">
+
+    <style>
+        .project-page {
+            max-width: var(--max-width);
+            margin: 3rem auto 2rem;
+            padding: 0 24px;
+        }
+        .project-page .back-link {
+            display: inline-block;
+            color: var(--text-light);
+            margin-bottom: 2.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border: none;
+        }
+        .project-page .back-link:hover {
+            color: var(--accent);
+            border: none;
+        }
+        .project-page .project-meta {
+            color: var(--accent-soft);
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 0.6rem;
+            text-align: center;
+        }
+        .project-page h1 {
+            font-size: 2.6rem;
+            margin-bottom: 1.2rem;
+            text-align: center;
+            letter-spacing: -0.015em;
+            line-height: 1.2;
+        }
+        .project-page .project-tags {
+            justify-content: center;
+            margin-bottom: 2.5rem;
+        }
+        .project-page .hero-image {
+            width: 100%;
+            margin: 0 0 2.5rem;
+            border: 1px solid var(--hairline);
+            border-radius: 2px;
+            overflow: hidden;
+            background: var(--code-bg);
+        }
+        .project-page .hero-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .project-page h2 {
+            font-size: 1.5rem;
+            margin-top: 2.5rem;
+            margin-bottom: 0.9rem;
+            font-weight: 700;
+        }
+        .project-page p {
+            font-size: 1.08rem;
+            line-height: 1.75;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+        .project-page ul, .project-page ol {
+            margin: 0 0 1rem 1.5rem;
+        }
+        .project-page li {
+            font-size: 1.08rem;
+            line-height: 1.7;
+            margin-bottom: 0.4rem;
+        }
+        .project-page .image-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .project-page .image-row img {
+            width: 100%;
+            border: 1px solid var(--hairline);
+            border-radius: 2px;
+        }
+        .project-page .external-links {
+            display: flex;
+            gap: 0.7rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        @media (max-width: 720px) {
+            .project-page .image-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="../index.html" class="nav-brand">Subash Timilsina</a>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="../index.html#about" class="nav-link">About</a></li>
+                <li class="nav-item"><a href="../index.html#research" class="nav-link">Research</a></li>
+                <li class="nav-item"><a href="../index.html#projects" class="nav-link">Projects</a></li>
+                <li class="nav-item"><a href="../index.html#blogs" class="nav-link">Blogs</a></li>
+                <li class="nav-item"><a href="../assets/CV.pdf" class="nav-link" target="_blank">CV</a></li>
+            </ul>
+            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+                <i class="fas fa-moon" id="theme-icon"></i>
+            </button>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <article class="project-page">
+        <a href="../index.html#projects" class="back-link">← Back to all projects</a>
+
+        <p class="project-meta">Project · Generative Models</p>
+        <h1>Multi-Domain Image Generation for Long-tailed Distributed Data</h1>
+        <div class="project-tags">
+            <span class="project-tag">Generative Models</span>
+            <span class="project-tag">Long-tailed Learning</span>
+        </div>
+
+        <div class="hero-image">
+            <img src="../assets/images/projects/longtail.jpg" alt="Long-tailed distribution illustration">
+        </div>
+
+        <h2>Overview</h2>
+        <p>
+            Real-world image datasets are usually long-tailed — a small set of "head" classes contain the bulk of the
+            samples while many "tail" classes have very few examples. Generative models trained naively on such data
+            collapse the tail classes and produce poor diversity for under-represented categories.
+        </p>
+        <p>
+            This project explores generative models that explicitly leverage <strong>cross-domain information</strong>
+            to fill in the long tail — borrowing structure from related domains (or auxiliary modalities) to synthesise
+            diverse, faithful samples for rare classes.
+        </p>
+
+        <h2>Goals</h2>
+        <ul>
+            <li>Identify shared structure between head and tail classes (or across domains).</li>
+            <li>Use that shared structure to regularise the generator on under-represented classes.</li>
+            <li>Quantify improvements in diversity and downstream classification on tail classes.</li>
+        </ul>
+
+        <h2>Status</h2>
+        <p>
+            Work in progress. More details, results, and code coming soon.
+        </p>
+    </article>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Subash Timilsina. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const body = document.body;
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            body.setAttribute('data-theme', 'dark');
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
+        }
+        themeToggle.addEventListener('click', () => {
+            const t = body.getAttribute('data-theme');
+            if (t === 'dark') {
+                body.removeAttribute('data-theme');
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

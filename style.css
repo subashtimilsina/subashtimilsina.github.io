@@ -1,0 +1,805 @@
+/* ==========================================================================
+   Academic Minimal — Subash Timilsina
+   Inspired by al-folio / classical academic websites
+   ========================================================================== */
+
+:root {
+    --bg-color: #fdfaf3;
+    --text-color: #1a1a1a;
+    --text-light: #555;
+    --text-lighter: #8a8377;
+    --accent: #8b1a3a;
+    --accent-hover: #a82547;
+    --accent-soft: #c47230;
+    --venue-color: #1d4d3a;
+    --border-color: #e6dfd0;
+    --hairline: #d8cfba;
+    --selection-bg: #f8d8b0;
+    --code-bg: #f1e9d8;
+    --max-width: 960px;
+}
+
+[data-theme="dark"] {
+    --bg-color: #1c1612;
+    --text-color: #efe6d3;
+    --text-light: #c2b9a4;
+    --text-lighter: #8a8170;
+    --accent: #e8a4b2;
+    --accent-hover: #f3c0c9;
+    --accent-soft: #d8a06a;
+    --venue-color: #8fbfa3;
+    --border-color: #332a22;
+    --hairline: #3f352a;
+    --selection-bg: #5c4720;
+    --code-bg: #2c241d;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+::selection {
+    background: var(--selection-bg);
+    color: var(--text-color);
+}
+
+html {
+    font-size: 18px;
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+}
+
+body {
+    font-family: 'Crimson Pro', 'Crimson Text', Georgia, 'Times New Roman', serif;
+    font-size: 23px;
+    line-height: 1.65;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    transition: background-color 0.25s ease, color 0.25s ease;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--text-color);
+    letter-spacing: -0.01em;
+}
+
+h1 { font-size: 2.8rem; margin-bottom: 0.4rem; }
+h2 { font-size: 1.8rem; margin-bottom: 1.2rem; font-weight: 600; }
+h3 { font-size: 1.3rem; margin-bottom: 0.4rem; font-weight: 600; }
+
+p {
+    margin-bottom: 1rem;
+}
+
+a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+a:hover {
+    color: var(--accent-hover);
+    border-bottom-color: var(--accent-hover);
+}
+
+em { font-style: italic; }
+strong { font-weight: 600; }
+
+code {
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.85em;
+    background: var(--code-bg);
+    padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+}
+
+/* ==========================================================================
+   Navigation — slim, minimal, top of page
+   ========================================================================== */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg-color);
+    border-bottom: 1px solid var(--hairline);
+}
+
+.nav-container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.nav-brand {
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-color);
+    border: none;
+    letter-spacing: 0.005em;
+}
+
+.nav-brand:hover {
+    color: var(--accent);
+    border: none;
+}
+
+.nav-menu {
+    list-style: none;
+    display: flex;
+    gap: 1.6rem;
+    margin: 0;
+    align-items: center;
+}
+
+.nav-link {
+    font-size: 1.05rem;
+    color: var(--text-light);
+    border: none;
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    color: var(--text-color);
+    border: none;
+}
+
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+    width: 34px;
+    height: 34px;
+    cursor: pointer;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    font-size: 0.85rem;
+}
+
+.theme-toggle:hover {
+    color: var(--text-color);
+    border-color: var(--text-light);
+}
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 4px;
+}
+
+.hamburger .bar {
+    width: 22px;
+    height: 1.5px;
+    background-color: var(--text-color);
+}
+
+/* ==========================================================================
+   Section headings (small caps style)
+   ========================================================================== */
+section {
+    padding: 56px 0 32px;
+}
+
+.section-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--accent);
+    margin-bottom: 1.8rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 2px solid var(--accent);
+    display: inline-block;
+}
+
+/* ==========================================================================
+   About / Profile
+   ========================================================================== */
+.profile-timeline {
+    padding-top: 64px;
+}
+
+.profile-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2rem;
+    align-items: start;
+    margin-bottom: 2.5rem;
+}
+
+.profile-info {
+    order: 1;
+}
+
+.profile-image-container {
+    order: 2;
+}
+
+.profile-image {
+    width: 200px;
+    height: 250px;
+    object-fit: cover;
+    object-position: center top;
+    border: 1px solid var(--hairline);
+    border-radius: 2px;
+    box-shadow: 4px 4px 0 var(--accent);
+}
+
+.profile-name {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+}
+
+.profile-tagline {
+    font-size: 1.2rem;
+    color: var(--text-color);
+    margin-bottom: 0.3rem;
+}
+
+.profile-description {
+    font-size: 1.1rem;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+}
+
+.social-links {
+    display: flex;
+    gap: 1.1rem;
+    align-items: center;
+    margin-top: 0.6rem;
+}
+
+.social-link {
+    color: var(--text-light);
+    border: none;
+    font-size: 1.65rem;
+    transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.social-link:hover {
+    color: var(--accent);
+    transform: translateY(-2px);
+    border: none;
+}
+
+.social-link:hover {
+    color: var(--accent);
+    border: none;
+}
+
+/* Bio paragraphs */
+.bio {
+    margin-bottom: 3rem;
+    color: var(--text-color);
+}
+
+.bio p {
+    margin-bottom: 1.1rem;
+    line-height: 1.75;
+    font-size: 1.08rem;
+}
+
+.bio em {
+    color: var(--accent);
+    font-style: italic;
+}
+
+/* ==========================================================================
+   Timeline — one-sided with vertical line on the left
+   ========================================================================== */
+.timeline-list {
+    list-style: none;
+    margin: 0;
+    padding: 1.5rem 0 0.5rem;
+    position: relative;
+}
+
+/* Vertical line on the left */
+.timeline-list::before {
+    content: '';
+    position: absolute;
+    left: 28px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--hairline);
+}
+
+.timeline-entry {
+    position: relative;
+    padding: 0.6rem 0 2rem 5rem;
+    box-sizing: border-box;
+}
+
+.timeline-entry:last-child {
+    padding-bottom: 0.5rem;
+}
+
+/* Marker = circular dot sitting on the line */
+.timeline-marker {
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    width: 56px;
+    height: 56px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    background: var(--bg-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    z-index: 1;
+    box-shadow: 0 0 0 4px var(--bg-color);
+    transition: transform 0.2s ease;
+}
+
+.timeline-entry:hover .timeline-marker {
+    transform: scale(1.05);
+}
+
+.timeline-logo {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+}
+
+.timeline-icon {
+    font-size: 1.5rem;
+    color: var(--accent);
+    line-height: 1;
+}
+
+.timeline-year {
+    display: block;
+    font-size: 1rem;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    font-style: italic;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    letter-spacing: 0.02em;
+}
+
+.timeline-content p {
+    font-size: 1.02rem;
+    line-height: 1.65;
+    margin: 0;
+    color: var(--text-color);
+}
+
+/* ==========================================================================
+   Publications — al-folio-style flat list, image left
+   ========================================================================== */
+.publications {
+    display: flex;
+    flex-direction: column;
+}
+
+.publication-card {
+    display: grid;
+    grid-template-columns: 310px 1fr;
+    gap: 2rem;
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--hairline);
+    align-items: start;
+}
+
+.publication-card:first-child { padding-top: 0.4rem; }
+.publication-card:last-child { border-bottom: none; }
+
+.publication-image {
+    background: var(--code-bg);
+    border: 1px solid var(--hairline);
+    border-radius: 2px;
+    overflow: hidden;
+    aspect-ratio: 16 / 11;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.35rem;
+}
+
+.publication-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.publication-image:hover img {
+    transform: scale(1.04);
+}
+
+.publication-content {
+    padding: 0.3rem 0 0;
+}
+
+.publication-content-full {
+    grid-column: 1 / -1;
+}
+
+.publication-card:has(.publication-content-full) {
+    grid-template-columns: 1fr;
+}
+
+.publication-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    line-height: 1.3;
+    color: var(--text-color);
+}
+
+.publication-authors {
+    font-size: 1rem;
+    color: var(--text-color);
+    margin-bottom: 0.2rem;
+}
+
+.publication-authors strong {
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.publication-venue {
+    font-size: 0.95rem;
+    color: var(--accent-soft);
+    font-style: italic;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+}
+
+.publication-description {
+    font-size: 0.98rem;
+    color: var(--text-color);
+    line-height: 1.5;
+    margin-bottom: 0.8rem;
+}
+
+.publication-links {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.pub-link {
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.3rem 0.75rem;
+    border: 1.5px solid var(--accent);
+    color: var(--accent);
+    border-radius: 2px;
+    background: transparent;
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-weight: 600;
+    transition: all 0.15s ease;
+}
+
+.pub-link:hover {
+    background: var(--accent);
+    color: var(--bg-color);
+    border-color: var(--accent);
+}
+
+/* ==========================================================================
+   Projects — multi-column grid, vertical card layout
+   ========================================================================== */
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    padding-top: 0.5rem;
+}
+
+.project-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--hairline);
+    border-radius: 2px;
+    background: var(--bg-color);
+    overflow: hidden;
+    color: inherit;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+    box-shadow: 4px 4px 0 var(--accent);
+    color: inherit;
+    border-bottom: 1px solid var(--accent);
+}
+
+.project-card:hover .project-title {
+    color: var(--accent);
+}
+
+.project-image {
+    background: var(--code-bg);
+    overflow: hidden;
+    aspect-ratio: 1.6 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid var(--hairline);
+    padding: 0.6rem;
+}
+
+.project-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.project-card:hover .project-image img {
+    transform: scale(1.04);
+}
+
+.project-content {
+    padding: 1.2rem 1.4rem 1.4rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.project-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.45rem;
+    line-height: 1.3;
+}
+
+.project-description {
+    font-size: 0.98rem;
+    color: var(--text-light);
+    line-height: 1.55;
+    margin-bottom: 0.9rem;
+    flex: 1;
+}
+
+.project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.7rem;
+}
+
+.project-tag {
+    font-size: 0.78rem;
+    padding: 0.18rem 0.6rem;
+    color: var(--accent-soft);
+    border: 1px solid var(--accent-soft);
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    background: transparent;
+}
+
+.project-links {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   Blogs — simple chronological list
+   ========================================================================== */
+.blog-grid {
+    display: flex;
+    flex-direction: column;
+}
+
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    padding-top: 0.5rem;
+}
+
+.blog-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--hairline);
+    border-radius: 2px;
+    background: var(--bg-color);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.blog-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+    box-shadow: 4px 4px 0 var(--accent);
+}
+
+.blog-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--code-bg);
+    overflow: hidden;
+    aspect-ratio: 1.6 / 1;
+    border-bottom: 1px solid var(--hairline);
+    border-radius: 0;
+    border: none;
+    padding: 0.6rem;
+}
+
+.blog-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+    display: block;
+}
+
+.blog-card:hover .blog-image img {
+    transform: scale(1.04);
+}
+
+.blog-content {
+    padding: 1.2rem 1.4rem 1.4rem;
+}
+
+.blog-date {
+    font-size: 0.95rem;
+    color: var(--accent);
+    font-style: italic;
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+}
+
+.blog-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 0.3rem;
+    line-height: 1.3;
+}
+
+.blog-title a {
+    color: var(--text-color);
+    border-bottom: 1px solid transparent;
+}
+
+.blog-title a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+
+.blog-description {
+    font-size: 1rem;
+    color: var(--text-light);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.blog-empty {
+    padding: 2rem 0;
+    color: var(--text-light);
+    font-style: italic;
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.footer {
+    margin-top: 4rem;
+    padding: 2rem 0 3rem;
+    border-top: 1px solid var(--hairline);
+    text-align: center;
+}
+
+.footer p {
+    font-size: 0.85rem;
+    color: var(--text-lighter);
+    margin: 0;
+    font-style: italic;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+@media (max-width: 720px) {
+    html { font-size: 17px; }
+    body { font-size: 21px; }
+
+    .profile-header {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .profile-image-container { order: -1; }
+
+    .profile-image {
+        width: 170px;
+        height: 210px;
+    }
+
+    .profile-name { font-size: 2.2rem; }
+
+    /* Smaller timeline markers on mobile */
+    .timeline-list::before {
+        left: 22px;
+    }
+
+    .timeline-entry {
+        padding: 0.5rem 0 1.6rem 4rem;
+    }
+
+    .timeline-marker {
+        width: 46px;
+        height: 46px;
+    }
+
+    .publication-card {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .publication-image {
+        max-width: 100%;
+        aspect-ratio: 16 / 9;
+    }
+
+    .project-grid,
+    .blog-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .nav-menu {
+        position: fixed;
+        left: -100%;
+        top: 56px;
+        flex-direction: column;
+        background: var(--bg-color);
+        width: 100%;
+        text-align: center;
+        gap: 0.6rem;
+        padding: 1.5rem 0;
+        border-bottom: 1px solid var(--hairline);
+        transition: left 0.3s ease;
+    }
+
+    .nav-menu.active { left: 0; }
+
+    .hamburger { display: flex; }
+
+    .hamburger.active .bar:nth-child(1) {
+        transform: translateY(5.5px) rotate(45deg);
+    }
+    .hamburger.active .bar:nth-child(2) { opacity: 0; }
+    .hamburger.active .bar:nth-child(3) {
+        transform: translateY(-5.5px) rotate(-45deg);
+    }
+}
