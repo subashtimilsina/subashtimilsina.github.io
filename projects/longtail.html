@@ -205,6 +205,18 @@
         .project-page .key-insight strong {
             color: var(--accent);
         }
+        .project-page .project-code-link {
+            text-align: center;
+            margin: -1.2rem 0 2rem;
+        }
+        .project-page .project-code-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .project-page .project-code-btn i {
+            font-size: 1rem;
+        }
         .project-page .external-links {
             display: flex;
             gap: 0.7rem;
@@ -284,6 +296,15 @@
             <span class="project-tag">Conditional Image Generation</span>
         </div>
 
+        <div class="project-code-link">
+            <a href="https://github.com/subashtimilsina/Content-Style-Long-Tail-Class-Generation"
+               class="pub-link project-code-btn"
+               target="_blank"
+               rel="noopener noreferrer">
+                <i class="fab fa-github" aria-hidden="true"></i>
+                Code
+            </a>
+        </div>
 
         <h2>The Problem</h2>
 
@@ -436,8 +457,8 @@
         <h2>Visualizing What the Model Learns — Does the Model Actually Recover Tail Classes?</h2>
 
         <p>
-            With identifiable content and style, we can hold the content noise $\bz_{\rm C}$ fixed and sweep across
-            class embeddings to inspect how style varies. The figures below verify the theorem qualitatively: the same
+            With content and style representations, we can fix the content noise $\bz_{\rm C}$ and sweep across
+            class embeddings to inspect how style varies. The figures below show qualitative results: the same
             content (pose, layout) is preserved while only style (texture, color, breed) changes across classes —
             including tail classes that had only 2–4 real samples.
         </p>
@@ -455,7 +476,7 @@
             </figure>
         </div>
         <p class="table-caption">
-            Figure&nbsp;1. Validation of the identifiability theorem: a fixed $\bz_{\rm C}$ across all images yields
+            Figure&nbsp;1. Qualitative results: a fixed $\bz_{\rm C}$ across all images yields
             consistent content while style varies smoothly with the class embedding $\bw_n$.
         </p>
 
