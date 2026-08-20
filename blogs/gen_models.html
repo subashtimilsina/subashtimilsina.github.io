@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Blog post by Subash Timilsina">
+    <meta name="description" content="A history of generative models from count-based models to flow matching, with notation, training objectives, algorithms, and sampling procedures.">
     <meta name="author" content="Subash Timilsina">
-    <title>Test Blog 1 - Subash Timilsina</title>
+    <title>Evolution of Generative Models - Subash Timilsina</title>
 
     <!-- Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,6 +17,22 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../style.css">
+
+    <!-- MathJax -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                tags: 'none'
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
 
     <style>
         .blog-post {
@@ -46,15 +62,39 @@
         }
         .blog-post h1 {
             font-size: 2.4rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
             text-align: center;
             letter-spacing: -0.015em;
         }
+        .blog-post .subtitle {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 1.05rem;
+            font-style: italic;
+            margin-bottom: 2.5rem;
+        }
         .blog-post h2 {
-            font-size: 1.4rem;
-            margin-top: 2.5rem;
+            font-size: 1.5rem;
+            margin-top: 3rem;
             margin-bottom: 0.8rem;
             font-weight: 600;
+            padding-bottom: 0.35rem;
+            border-bottom: 1px solid var(--hairline);
+        }
+        .blog-post h3 {
+            font-size: 1.15rem;
+            margin-top: 2rem;
+            margin-bottom: 0.6rem;
+            font-weight: 600;
+        }
+        .blog-post h4 {
+            font-size: 0.82rem;
+            margin-top: 1.4rem;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            color: var(--text-light);
         }
         .blog-post p {
             font-size: 1.05rem;
@@ -65,6 +105,7 @@
         .blog-post li {
             font-size: 1.05rem;
             line-height: 1.75;
+            margin-bottom: 0.35rem;
         }
         .blog-post ul, .blog-post ol {
             margin: 0 0 1rem 1.5rem;
@@ -83,7 +124,8 @@
             border: 1px solid var(--hairline);
             overflow-x: auto;
             margin: 1.2rem 0;
-            font-size: 0.88rem;
+            font-size: 0.82rem;
+            line-height: 1.6;
         }
         .blog-post pre code {
             background: none;
@@ -96,6 +138,136 @@
             margin: 1.5rem 0;
             font-style: italic;
         }
+
+        /* Table of contents */
+        .toc {
+            border: 1px solid var(--hairline);
+            border-radius: 3px;
+            padding: 1.2rem 1.5rem 1rem;
+            margin: 2rem 0 2.5rem;
+            background: var(--code-bg);
+        }
+        .toc h4 { margin-top: 0; }
+        .toc ol { margin-left: 1.2rem; margin-bottom: 0; }
+        .toc li { font-size: 0.95rem; line-height: 1.6; }
+        .toc a { border: none; }
+
+        /* Tables */
+        .blog-post table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.4rem 0;
+            font-size: 0.95rem;
+            display: block;
+            overflow-x: auto;
+            white-space: normal;
+        }
+        .blog-post th, .blog-post td {
+            border-bottom: 1px solid var(--hairline);
+            padding: 0.55rem 0.7rem;
+            text-align: left;
+            vertical-align: top;
+            line-height: 1.55;
+        }
+        .blog-post th {
+            font-weight: 600;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: var(--text-light);
+            border-bottom: 1px solid var(--text-light);
+        }
+
+        /* Algorithm boxes */
+        .algo {
+            border: 1px solid var(--hairline);
+            border-left: 3px solid var(--accent);
+            border-radius: 3px;
+            margin: 1.4rem 0;
+            overflow: hidden;
+        }
+        .algo .algo-title {
+            font-size: 0.76rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+            padding: 0.5rem 1.1rem;
+            border-bottom: 1px solid var(--hairline);
+            color: var(--text-light);
+            background: var(--code-bg);
+        }
+        .algo pre {
+            margin: 0;
+            border: none;
+            border-radius: 0;
+            background: transparent;
+        }
+
+        /* Key-idea callout */
+        .callout {
+            border: 1px solid var(--hairline);
+            border-radius: 3px;
+            padding: 0.9rem 1.2rem;
+            margin: 1.5rem 0;
+            background: var(--code-bg);
+        }
+        .callout p { margin-bottom: 0; font-size: 1rem; }
+        .callout p + p { margin-top: 0.7rem; }
+
+        /* Lineage diagram */
+        .lineage-wrap { overflow-x: auto; margin: 1.8rem 0 2rem; }
+        .lineage {
+            display: grid;
+            grid-template-columns: 130px repeat(4, minmax(150px, 1fr));
+            gap: 6px;
+            min-width: 780px;
+        }
+        .lin-era {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            color: var(--text-light);
+            font-weight: 600;
+            padding: 0 0 0.35rem;
+            border-bottom: 1px solid var(--hairline);
+            text-align: center;
+        }
+        .lin-lane {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: var(--text-light);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        .lin-node {
+            border: 1px solid var(--hairline);
+            border-radius: 3px;
+            padding: 0.5rem 0.6rem;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-color);
+        }
+        .lin-node.strong {
+            border-color: var(--accent);
+            box-shadow: 2px 2px 0 var(--accent);
+        }
+        .lin-node.empty {
+            border-style: dashed;
+            color: var(--text-lighter);
+        }
+
+        .blog-post mjx-container[display="true"] {
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 3px 1px;
+        }
+        .footnote { font-size: 0.92rem; color: var(--text-light); }
     </style>
 </head>
 <body>
@@ -126,40 +298,1315 @@
             ← Back to all blogs
         </a>
 
-        <p class="post-meta">Draft &middot; <time datetime="2026-01-01">January 1, 2026</time></p>
-        <h1>Test Blog 1</h1>
-
-        <p>
-            This is a placeholder blog post. Replace this content with your own writing.
+        <p class="post-meta"><time datetime="2026-08-19">August 19, 2026</time></p>
+        <h1>The Evolution of Generative Models</h1>
+        <p class="subtitle">
+            From counting to energy, to latents, to adversaries, to autoregression,
+            to score and flow &mdash; one problem, seven answers.
         </p>
 
-        <h2>Introduction</h2>
         <p>
-            Start your post here. You can use standard HTML tags such as
-            <code>&lt;h2&gt;</code>, <code>&lt;p&gt;</code>, <code>&lt;ul&gt;</code>,
-            <code>&lt;blockquote&gt;</code>, <code>&lt;pre&gt;&lt;code&gt;</code>, and images.
+            Every generative model in this post is an answer to the same question: given samples from an
+            unknown distribution, how do you build a machine that produces new samples from it? What
+            changes across seventy years is <em>what object the model represents</em> &mdash; a table of
+            counts, an energy, a latent-variable decoder, a sampler, a conditional, a score, or a
+            velocity field &mdash; and each choice determines the training objective and the sampling
+            procedure that follow from it.
+        </p>
+        <p>
+            My aim here is to write each family in a single consistent notation so the lineage is visible:
+            EM's ELBO is literally the VAE's ELBO; the Langevin sampler that made Boltzmann machines
+            intractable is the sampler that makes diffusion work; diffusion is a hierarchical VAE with the
+            encoder frozen; flow matching is a continuous normalizing flow with the simulation removed
+            from training. These are not analogies. They are the same equations, reused.
         </p>
 
-        <h2>Sample formatting</h2>
+        <div class="toc">
+            <h4>Contents</h4>
+            <ol>
+                <li><a href="#setup">The problem and the notation</a></li>
+                <li><a href="#one-objective">One objective and three obstacles</a></li>
+                <li><a href="#era1">Era I &mdash; Classical probabilistic models (1950s&ndash;2000s)</a></li>
+                <li><a href="#era2">Era II &mdash; Early neural generative models (1980s&ndash;2012)</a></li>
+                <li><a href="#era3">Era III &mdash; The deep generative era (2013&ndash;2019)</a></li>
+                <li><a href="#era4">Era IV &mdash; The diffusion era (2020&ndash;2023)</a></li>
+                <li><a href="#era5">Era V &mdash; Flow matching and hybrids (2022&ndash;)</a></li>
+                <li><a href="#unifying">The unifying picture</a></li>
+            </ol>
+        </div>
+
+        <h2 id="setup">1. The problem and the notation</h2>
+
+        <p>
+            Fix a data space $\mathcal{X}$ &mdash; $\mathbb{R}^D$ for images and audio, $\mathcal{V}^T$
+            (sequences of tokens from a finite vocabulary $\mathcal{V}$) for text. There is a true but
+            unknown distribution $p_{\text{data}}$ on $\mathcal{X}$, and we observe a finite dataset
+        </p>
+        $$\mathcal{D} = \{x^{(1)}, \dots, x^{(N)}\}, \qquad x^{(i)} \stackrel{\text{iid}}{\sim} p_{\text{data}}.$$
+        <p>
+            A <strong>generative model</strong> is a parametric family $\{p_\theta : \theta \in \Theta\}$
+            together with a procedure for drawing $x \sim p_\theta$. Two capabilities are worth
+            distinguishing, because most of the history is about trading one for the other:
+        </p>
         <ul>
-            <li>Bullet point one.</li>
-            <li>Bullet point two.</li>
-            <li>Bullet point three.</li>
+            <li><strong>Density evaluation</strong>: given $x$, compute (or lower-bound) $\log p_\theta(x)$.</li>
+            <li><strong>Sampling</strong>: draw fresh $x \sim p_\theta$.</li>
+        </ul>
+        <p>
+            A model that can do both cheaply and exactly is rare. Autoregressive models get exact density
+            but slow sampling; GANs get fast sampling but no density at all; energy-based models get a
+            flexible unnormalized density but neither exact likelihood nor fast sampling.
+        </p>
+
+        <h4>Notation used throughout</h4>
+        <table>
+            <thead>
+                <tr><th style="width:22%">Symbol</th><th>Meaning</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>$x \in \mathcal{X}$</td><td>An observed data point. For sequences, $x = (x_1,\dots,x_T)$ and $x_{\lt t} = (x_1,\dots,x_{t-1})$.</td></tr>
+                <tr><td>$p_{\text{data}}(x)$</td><td>The true data distribution; accessible only through samples.</td></tr>
+                <tr><td>$p_\theta(x)$</td><td>The model distribution, parameters $\theta$.</td></tr>
+                <tr><td>$z \in \mathcal{Z}$</td><td>A latent (unobserved) variable, usually $\mathcal{Z} = \mathbb{R}^d$ with $d \le D$.</td></tr>
+                <tr><td>$p(z)$</td><td>Prior over latents, almost always $\mathcal{N}(0, I_d)$.</td></tr>
+                <tr><td>$p_\theta(x \mid z)$</td><td>Decoder / likelihood / observation model.</td></tr>
+                <tr><td>$q_\phi(z \mid x)$</td><td>Encoder / approximate posterior, parameters $\phi$.</td></tr>
+                <tr><td>$E_\theta(x)$</td><td>Energy function; $Z(\theta) = \int e^{-E_\theta(x)}dx$ is the partition function.</td></tr>
+                <tr><td>$s_\theta(x)$</td><td>Score network, trained to approximate $\nabla_x \log p(x)$ (gradient w.r.t. <em>data</em>, not parameters).</td></tr>
+                <tr><td>$v_\theta(x,t)$</td><td>Velocity field, trained to approximate the transport vector field at time $t$.</td></tr>
+                <tr><td>$\varepsilon_\theta(x_t,t)$</td><td>Noise-prediction network in diffusion; $\varepsilon \sim \mathcal{N}(0,I)$ is the injected noise.</td></tr>
+                <tr><td>$p_t$</td><td>Marginal distribution at time $t \in [0,1]$ of a noising / interpolation process.</td></tr>
+                <tr><td>$D_{\mathrm{KL}}(p \Vert q)$</td><td>$\mathbb{E}_{p}[\log p(x) - \log q(x)] \ge 0$, with equality iff $p = q$.</td></tr>
+                <tr><td>$\mathbb{H}(q)$</td><td>Entropy $-\mathbb{E}_q[\log q]$.</td></tr>
+                <tr><td>$\eta$, $B$</td><td>Learning rate and minibatch size.</td></tr>
+            </tbody>
+        </table>
+
+        <p>
+            One convention worth stating explicitly because it causes endless confusion: in this post
+            <strong>"score" always means $\nabla_x \log p(x)$</strong>, the gradient with respect to the
+            data, not the statistician's score $\nabla_\theta \log p_\theta(x)$. The whole diffusion
+            literature rests on the first meaning.
+        </p>
+
+        <h2 id="one-objective">2. One objective and three obstacles</h2>
+
+        <p>
+            Nearly every model before 2014 &mdash; and most after &mdash; is trained by
+            <strong>maximum likelihood</strong>:
+        </p>
+        $$\theta^\star = \arg\max_{\theta}\; \frac{1}{N}\sum_{i=1}^{N} \log p_\theta\!\left(x^{(i)}\right).$$
+        <p>
+            This is not an arbitrary choice. As $N \to \infty$ the empirical average converges to
+            $\mathbb{E}_{p_{\text{data}}}[\log p_\theta(x)]$, and
+        </p>
+        $$D_{\mathrm{KL}}\big(p_{\text{data}} \,\Vert\, p_\theta\big)
+        = \underbrace{\mathbb{E}_{p_{\text{data}}}[\log p_{\text{data}}(x)]}_{\text{constant in }\theta}
+        - \mathbb{E}_{p_{\text{data}}}[\log p_\theta(x)],$$
+        <p>
+            so maximizing likelihood is exactly minimizing the <em>forward</em> KL divergence
+            $D_{\mathrm{KL}}(p_{\text{data}} \Vert p_\theta)$. The direction matters. Forward KL pays an
+            infinite penalty wherever $p_{\text{data}} > 0$ but $p_\theta \to 0$, so maximum-likelihood
+            models are <strong>mode-covering</strong>: they would rather smear probability over empty
+            regions than drop a mode. This single fact explains why VAEs produce blurry images, why
+            language models assign non-trivial probability to nonsense, and why GANs &mdash; which
+            minimize a different divergence &mdash; behave in the opposite way (sharp, but
+            mode-dropping).
+        </p>
+
+        <p>
+            If maximum likelihood is the goal, why are there so many families? Because
+            $\log p_\theta(x)$ is hard to write down. Exactly three obstacles arise, and each family is
+            defined by which one it accepts and how it dodges the others.
+        </p>
+
+        <ol>
+            <li>
+                <strong>The normalization obstacle.</strong> If you parameterize an unnormalized score
+                $\tilde p_\theta(x) = e^{-E_\theta(x)}$, then $\log p_\theta(x) = -E_\theta(x) - \log Z(\theta)$
+                and $Z(\theta)$ is a $D$-dimensional integral you cannot compute. <em>Energy-based
+                models live here.</em>
+            </li>
+            <li>
+                <strong>The marginalization obstacle.</strong> If you introduce latents,
+                $p_\theta(x) = \int p_\theta(x \mid z)p(z)\,dz$ is again an intractable integral, and the
+                posterior $p_\theta(z \mid x)$ needed to reason about it is intractable too.
+                <em>Mixture models, VAEs, and diffusion live here.</em>
+            </li>
+            <li>
+                <strong>The expressiveness obstacle.</strong> You can sidestep both by restricting the
+                architecture so that $\log p_\theta(x)$ is closed-form &mdash; a factorized chain rule
+                (autoregressive) or an invertible map (normalizing flows) &mdash; but you pay in
+                architectural freedom or sampling speed.
+            </li>
+        </ol>
+
+        <p>
+            And there is a fourth path, taken in 2014: <strong>give up on likelihood entirely</strong>.
+            Define the model implicitly as a sampler $x = G_\theta(z)$ and train it by comparing samples
+            to data. That is the GAN, and it is why it needs an entirely different theory.
+        </p>
+
+        <h4>The lineage at a glance</h4>
+        <div class="lineage-wrap">
+            <div class="lineage">
+                <div></div>
+                <div class="lin-era">1950s&ndash;2000s</div>
+                <div class="lin-era">1980s&ndash;2012</div>
+                <div class="lin-era">2013&ndash;2019</div>
+                <div class="lin-era">2020&ndash;now</div>
+
+                <div class="lin-lane">Factorized</div>
+                <div class="lin-node">Counts &amp; $n$-grams<br>Markov chains</div>
+                <div class="lin-node">NPLM, NADE<br>sigmoid belief nets</div>
+                <div class="lin-node strong">PixelRNN/CNN<br>WaveNet, Transformer</div>
+                <div class="lin-node strong">LLMs, discrete<br>/ masked diffusion</div>
+
+                <div class="lin-lane">Energy</div>
+                <div class="lin-node">Ising, MRFs<br>Gibbs distributions</div>
+                <div class="lin-node">Boltzmann machines<br>RBM, DBN (CD-$k$)</div>
+                <div class="lin-node">Score matching<br>NCSN, Langevin</div>
+                <div class="lin-node strong">Diffusion<br>(DDPM, score SDE)</div>
+
+                <div class="lin-lane">Latent</div>
+                <div class="lin-node">Mixtures + EM<br>HMM, PCA, LDA</div>
+                <div class="lin-node">Helmholtz machine<br>wake&ndash;sleep</div>
+                <div class="lin-node strong">VAE<br>(amortized ELBO)</div>
+                <div class="lin-node">Hierarchical VAE<br>= diffusion ELBO</div>
+
+                <div class="lin-lane">Transport</div>
+                <div class="lin-node">Change of variables<br>Gaussianization</div>
+                <div class="lin-node empty">&mdash;</div>
+                <div class="lin-node">NICE, RealNVP<br>Glow, CNF / FFJORD</div>
+                <div class="lin-node strong">Flow matching<br>rectified flow</div>
+
+                <div class="lin-lane">Implicit</div>
+                <div class="lin-node empty">&mdash;</div>
+                <div class="lin-node empty">&mdash;</div>
+                <div class="lin-node strong">GAN, WGAN<br>StyleGAN</div>
+                <div class="lin-node">Adversarial<br>distillation, 1&ndash;4 step</div>
+            </div>
+        </div>
+
+        <h2 id="era1">3. Era I &mdash; Classical probabilistic models (1950s&ndash;2000s)</h2>
+
+        <p>
+            The classical era establishes the three templates that everything else inherits: the
+            <em>chain rule</em>, the <em>ELBO</em>, and the <em>Gibbs distribution</em>. There are no deep
+            networks, but almost every modern objective is already present in embryo.
+        </p>
+
+        <h3>3.1 Count-based models: the chain rule with a lookup table</h3>
+
+        <p>
+            <strong>Setup.</strong> Data are sequences $x = (x_1,\dots,x_T)$ with $x_t \in \mathcal{V}$.
+            The chain rule of probability is exact and assumption-free:
+        </p>
+        $$p(x) = \prod_{t=1}^{T} p(x_t \mid x_{\lt t}).$$
+        <p>
+            The problem is that $x_{\lt t}$ has $|\mathcal{V}|^{t-1}$ possible values. The $n$-gram
+            assumption truncates the context to the last $n-1$ symbols:
+        </p>
+        $$p_\theta(x) = \prod_{t=1}^{T} \theta_{\,x_t \mid c_t}, \qquad c_t = x_{t-n+1:t-1},$$
+        <p>
+            with parameters $\theta = \{\theta_{w \mid c}\}$ constrained to the simplex,
+            $\theta_{w \mid c} \ge 0$ and $\sum_{w \in \mathcal{V}} \theta_{w \mid c} = 1$ for each context $c$.
+        </p>
+
+        <h4>Training objective</h4>
+        <p>
+            Maximum likelihood over the corpus, subject to the simplex constraints. Writing $C(c,w)$ for
+            the number of times symbol $w$ follows context $c$ in $\mathcal{D}$, the log-likelihood
+            collapses into a sum over contexts:
+        </p>
+        $$\max_{\theta}\; \sum_{c}\sum_{w} C(c,w)\,\log \theta_{w \mid c}
+        \quad \text{s.t.} \quad \sum_w \theta_{w\mid c} = 1 .$$
+        <p>
+            Introducing a Lagrange multiplier $\lambda_c$ per context and setting the derivative to zero
+            gives $C(c,w)/\theta_{w\mid c} = \lambda_c$, and the constraint fixes $\lambda_c = C(c) := \sum_w C(c,w)$.
+            The maximum-likelihood solution is a closed-form ratio of counts:
+        </p>
+        $$\hat\theta_{w \mid c} = \frac{C(c,w)}{C(c)}.$$
+
+        <div class="algo">
+            <div class="algo-title">Algorithm 1 &mdash; Count-based training and sampling</div>
+<pre><code>Train:
+  1. C <- empty hash map                    # sparse count table
+  2. for each sequence x in D:
+  3.     for t = 1..T:
+  4.         C[(x[t-n+1:t-1], x[t])] += 1
+  5. theta[w|c] <- (C[c,w] + alpha) / (C[c] + alpha*|V|)   # add-alpha smoothing
+
+Sample:
+  1. c <- start context (BOS symbols)
+  2. for t = 1..T:
+  3.     x[t] ~ Categorical(theta[ . | c])
+  4.     c    <- shift(c, x[t])
+  5. return x</code></pre>
+        </div>
+
+        <h4>Inference / generation</h4>
+        <p>
+            <strong>Ancestral sampling</strong>: draw $x_1 \sim \theta_{\cdot \mid c_1}$, append it to the
+            context, draw $x_2$, and so on. Every draw is an exact sample from $p_\theta$ &mdash; a
+            property autoregressive models keep forever and that no other family (except flows) enjoys.
+            Density evaluation is a single pass of table lookups.
+        </p>
+
+        <h4>Why it breaks</h4>
+        <p>
+            The table has $O(|\mathcal{V}|^n)$ entries, so it grows exponentially in context length while
+            the data does not: most contexts are seen zero times, and MLE assigns them probability zero,
+            making the test log-likelihood $-\infty$. The entire smoothing literature (add-$\alpha$,
+            Good&ndash;Turing, Kneser&ndash;Ney, backoff and interpolation) exists to patch this. But
+            smoothing is a symptom, not a cure. The real disease is that the model has
+            <strong>no notion of similarity between contexts</strong>: "the cat sat on the" and "a cat
+            sat upon a" are unrelated table keys.
+        </p>
+
+        <div class="callout">
+            <p>
+                <strong>Connection forward.</strong> Every autoregressive neural model &mdash; NPLM, RNN,
+                PixelCNN, WaveNet, GPT &mdash; keeps the factorization $\prod_t p_\theta(x_t \mid x_{\lt t})$
+                verbatim and changes only <em>how the conditional is computed</em>: replace the lookup
+                table with a function approximator that maps contexts into a shared vector space. Then
+                similar contexts share statistical strength automatically, and smoothing becomes
+                unnecessary. GPT is a $n$-gram model with $n = \infty$ and a learned context
+                representation.
+            </p>
+        </div>
+
+        <h3>3.2 Mixture models and EM: where the ELBO comes from</h3>
+
+        <p>
+            <strong>Setup.</strong> Introduce a discrete latent $z \in \{1,\dots,K\}$ indicating which of
+            $K$ components generated $x$. The Gaussian mixture model is
+        </p>
+        $$p_\theta(x) = \sum_{k=1}^{K} \pi_k\, \mathcal{N}(x; \mu_k, \Sigma_k),
+        \qquad \theta = \{\pi_k, \mu_k, \Sigma_k\}_{k=1}^K, \quad \textstyle\sum_k \pi_k = 1.$$
+        <p>
+            The log-likelihood $\sum_i \log \sum_k \pi_k \mathcal{N}(x^{(i)}; \mu_k,\Sigma_k)$ has a
+            logarithm outside a sum, so it has no closed-form maximizer. The fix &mdash; and this is the
+            most consequential derivation in the whole post &mdash; is to introduce an arbitrary
+            distribution $q(z)$ and apply Jensen's inequality:
+        </p>
+        $$\log p_\theta(x) = \log \sum_z q(z)\frac{p_\theta(x,z)}{q(z)}
+        \;\ge\; \underbrace{\mathbb{E}_{q(z)}\!\left[\log p_\theta(x,z)\right] + \mathbb{H}(q)}_{\textstyle \mathcal{L}(q,\theta)}.$$
+        <p>
+            $\mathcal{L}(q,\theta)$ is the <strong>evidence lower bound (ELBO)</strong>. The gap is exactly
+            a KL divergence:
+        </p>
+        $$\log p_\theta(x) - \mathcal{L}(q,\theta) = D_{\mathrm{KL}}\big(q(z) \,\Vert\, p_\theta(z \mid x)\big) \ge 0.$$
+        <p>
+            <strong>Expectation&ndash;Maximization</strong> is coordinate ascent on $\mathcal{L}$. The
+            E-step maximizes over $q$ (the gap is zero when $q = p_\theta(z\mid x)$, which for a mixture
+            is a tractable $K$-way softmax); the M-step maximizes over $\theta$ with $q$ held fixed.
+            Because each step increases a lower bound that touches the true objective after the E-step,
+            the likelihood is monotonically non-decreasing.
+        </p>
+
+        <div class="algo">
+            <div class="algo-title">Algorithm 2 &mdash; EM for a Gaussian mixture</div>
+<pre><code>Init: pi, mu, Sigma  (e.g. k-means)
+repeat until the log-likelihood stops improving:
+
+  E-step   (exact posterior; responsibilities)
+      r[i,k] <- pi[k] * N(x_i; mu[k], Sigma[k])
+                / sum_j pi[j] * N(x_i; mu[j], Sigma[j])
+
+  M-step   (closed-form weighted moments)
+      N_k      <- sum_i r[i,k]
+      pi[k]    <- N_k / N
+      mu[k]    <- (1/N_k) * sum_i r[i,k] * x_i
+      Sigma[k] <- (1/N_k) * sum_i r[i,k] * (x_i - mu[k])(x_i - mu[k])^T</code></pre>
+        </div>
+
+        <h4>Inference / generation</h4>
+        <p>
+            Ancestral again, now through the latent: sample $k \sim \mathrm{Categorical}(\pi)$, then
+            $x \sim \mathcal{N}(\mu_k, \Sigma_k)$. Density evaluation is an exact $K$-term sum.
+        </p>
+
+        <h4>Relatives worth naming</h4>
+        <ul>
+            <li>
+                <strong>Hidden Markov models</strong> put the latent in a chain,
+                $p_\theta(x,z) = p(z_1)\prod_t p(z_t \mid z_{t-1}) p(x_t \mid z_t)$. The E-step becomes the
+                forward&ndash;backward algorithm; dynamic programming replaces the $K$-way softmax. This
+                is the ancestor of linear state-space sequence models.
+            </li>
+            <li>
+                <strong>Factor analysis and probabilistic PCA</strong> take $z \in \mathbb{R}^d$ continuous
+                with a linear decoder, $x = Wz + \mu + \varepsilon$. This is <em>exactly</em> a VAE with a
+                linear decoder &mdash; and because everything is Gaussian, the posterior is available in
+                closed form, so no encoder network is needed.
+            </li>
+            <li>
+                <strong>Latent Dirichlet allocation</strong> made variational inference (rather than exact
+                EM) standard practice for models whose posterior is not tractable.
+            </li>
         </ul>
 
-        <blockquote>
-            A short quote or a key idea you want to highlight.
-        </blockquote>
+        <div class="callout">
+            <p>
+                <strong>Connection forward.</strong> The ELBO above is, symbol for symbol, the VAE
+                objective. The only two changes in 2013 are: (i) the exact posterior is replaced by a
+                learned network $q_\phi(z \mid x)$ because $p_\theta(z\mid x)$ is intractable for a
+                nonlinear decoder (<em>variational</em>), and (ii) instead of a per-datapoint $q$, one
+                network predicts $q$ for every $x$ (<em>amortized</em>). EM's alternating E/M steps become
+                a single joint gradient step on $(\theta,\phi)$.
+            </p>
+        </div>
 
-        <pre><code>// Code block example
-function hello() {
-    console.log("Hello, world!");
-}</code></pre>
+        <h3>3.3 Markov random fields: probability as energy</h3>
 
-        <h2>Conclusion</h2>
         <p>
-            Wrap up your post here.
+            The third classical template comes from statistical physics. Any strictly positive
+            distribution can be written as a <strong>Gibbs distribution</strong>
         </p>
+        $$p_\theta(x) = \frac{1}{Z(\theta)} \exp\big(-E_\theta(x)\big),
+        \qquad Z(\theta) = \sum_{x \in \mathcal{X}} \exp\big(-E_\theta(x)\big),$$
+        <p>
+            where $E_\theta$ is an <em>energy</em>: low energy means high probability. The Ising model
+            takes $x \in \{-1,+1\}^D$ on a lattice with
+            $E_\theta(x) = -\sum_{(i,j)\in \mathcal{E}} W_{ij}x_i x_j - \sum_i b_i x_i$, and the
+            Hammersley&ndash;Clifford theorem says the Gibbs form and conditional-independence structure
+            are equivalent.
+        </p>
+        <p>
+            This parameterization is maximally convenient (any neural network can be an energy, with no
+            architectural constraints) and maximally inconvenient (the sum defining $Z(\theta)$ has
+            $2^D$ terms). That tension is obstacle #1 from &sect;2, and resolving it drives the next
+            thirty years.
+        </p>
+
+        <h2 id="era2">4. Era II &mdash; Early neural generative models (1980s&ndash;2012)</h2>
+
+        <h3>4.1 Boltzmann machines: learning an energy</h3>
+
+        <p>
+            <strong>Setup.</strong> A Boltzmann machine is an Ising model with learned weights and
+            <em>hidden</em> units. Split the state into visible $v \in \{0,1\}^{D}$ and hidden
+            $h \in \{0,1\}^{M}$, define a joint energy $E_\theta(v,h)$, and marginalize:
+        </p>
+        $$p_\theta(v) = \frac{1}{Z(\theta)}\sum_{h} e^{-E_\theta(v,h)} = \frac{e^{-F_\theta(v)}}{Z(\theta)},
+        \qquad F_\theta(v) := -\log \sum_h e^{-E_\theta(v,h)},$$
+        <p>
+            where $F_\theta$ is the <strong>free energy</strong>. Note that this model faces obstacles #1
+            and #2 simultaneously.
+        </p>
+
+        <h4>Training objective and its gradient</h4>
+        <p>
+            Maximum likelihood, as always. Differentiating
+            $\log p_\theta(v) = -F_\theta(v) - \log Z(\theta)$ and using
+            $\nabla_\theta \log Z(\theta) = -\mathbb{E}_{\tilde v \sim p_\theta}[\nabla_\theta F_\theta(\tilde v)]$
+            gives the defining equation of energy-based learning:
+        </p>
+        $$\nabla_\theta \log p_\theta(v) \;=\; \underbrace{-\nabla_\theta F_\theta(v)}_{\text{positive phase}}
+        \;+\; \underbrace{\mathbb{E}_{\tilde v \sim p_\theta}\big[\nabla_\theta F_\theta(\tilde v)\big]}_{\text{negative phase}}.$$
+        <p>
+            Read it as a contrast: <em>push energy down on real data, push energy up on the model's own
+            samples.</em> Training halts when the two phases balance, i.e. when the model's samples are
+            statistically indistinguishable from the data under the energy's sufficient statistics. The
+            negative phase requires sampling from $p_\theta$ &mdash; which requires MCMC &mdash; and that
+            is the bottleneck.
+        </p>
+
+        <h3>4.2 Restricted Boltzmann machines and contrastive divergence</h3>
+
+        <p>
+            Removing the within-layer connections yields the <strong>RBM</strong>, a bipartite energy
+        </p>
+        $$E_\theta(v,h) = -v^\top W h - b^\top v - c^\top h,$$
+        <p>
+            whose conditionals factorize completely:
+        </p>
+        $$p_\theta(h_j = 1 \mid v) = \sigma\big(c_j + W_{:,j}^\top v\big), \qquad
+          p_\theta(v_i = 1 \mid h) = \sigma\big(b_i + W_{i,:}\, h\big),$$
+        <p>
+            with $\sigma$ the logistic function. Factorized conditionals mean an entire layer can be
+            resampled in one vectorized operation &mdash; <strong>block Gibbs sampling</strong>. The free
+            energy is also closed-form, $F_\theta(v) = -b^\top v - \sum_j \mathrm{softplus}(c_j + W_{:,j}^\top v)$,
+            and the weight gradient reduces to a difference of correlations,
+            $\nabla_W \log p_\theta(v) = \mathbb{E}_{\text{data}}[v h^\top] - \mathbb{E}_{\text{model}}[v h^\top]$.
+        </p>
+        <p>
+            <strong>Contrastive divergence (CD-$k$)</strong> approximates the intractable model
+            expectation by running the Gibbs chain for only $k$ steps &mdash; often $k=1$ &mdash;
+            initialized <em>at the data</em> rather than at random. It is a biased gradient estimator (it
+            does not follow the gradient of any objective exactly), but it works well enough in practice
+            and made deep unsupervised learning viable in 2006.
+        </p>
+
+        <div class="algo">
+            <div class="algo-title">Algorithm 3 &mdash; RBM training with CD-k</div>
+<pre><code>repeat:
+  1. sample minibatch v0 ~ D
+  2. h0 ~ p(h | v0)                          # positive phase, one vectorized pass
+
+  3. v_k, h_k <- v0, h0                      # negative phase: k Gibbs sweeps
+     for s = 1..k:
+         v_k ~ p(v | h_k)
+         h_k ~ p(h | v_k)
+
+  4. grad_W <- v0 @ h0^T  -  v_k @ h_k^T     # &lt;vh&gt; under data  -  under model
+     grad_b <- v0 - v_k
+     grad_c <- h0 - h_k
+  5. theta <- theta + eta * grad             # ascent: we are maximizing log-likelihood</code></pre>
+        </div>
+
+        <h4>Inference / generation</h4>
+        <p>
+            There is no ancestral shortcut. To sample you must run the Gibbs chain from a random state
+            until it mixes, which for a multimodal energy can take arbitrarily long &mdash; the chain gets
+            trapped in a basin and rarely crosses between modes. This <em>mixing problem</em> is the
+            fundamental limitation of energy-based generation, and it is precisely what diffusion solves
+            fifteen years later.
+        </p>
+        <p>
+            Stacking RBMs greedily gives <strong>deep belief networks</strong>, which in 2006 were the
+            first practical way to train deep networks; layer-wise generative pretraining followed by
+            discriminative fine-tuning was the standard recipe until better initialization, ReLUs, and
+            more data made it unnecessary.
+        </p>
+
+        <h3>4.3 Score matching: the trick that removes $Z$</h3>
+
+        <p>
+            In 2005 Hyv&auml;rinen asked a sharp question: what if we never need $Z(\theta)$ at all?
+            Observe that the partition function is a constant in $x$, so it vanishes under the
+            <em>data</em> gradient:
+        </p>
+        $$\nabla_x \log p_\theta(x) = \nabla_x \big(-E_\theta(x) - \log Z(\theta)\big) = -\nabla_x E_\theta(x).$$
+        <p>
+            So if we are content to learn the <strong>score</strong> $s_\theta(x) \approx \nabla_x \log p_{\text{data}}(x)$
+            rather than the density, normalization simply does not arise. Score matching minimizes the
+            Fisher divergence
+        </p>
+        $$J(\theta) = \tfrac{1}{2}\,\mathbb{E}_{p_{\text{data}}}\big\Vert s_\theta(x) - \nabla_x \log p_{\text{data}}(x) \big\Vert^2,$$
+        <p>
+            which looks unusable because $\nabla_x\log p_{\text{data}}$ is unknown &mdash; but integration
+            by parts eliminates it, leaving an objective computable from data alone:
+        </p>
+        $$J(\theta) = \mathbb{E}_{p_{\text{data}}}\!\left[\operatorname{tr}\big(\nabla_x s_\theta(x)\big) + \tfrac{1}{2}\Vert s_\theta(x)\Vert^2 \right] + \text{const}.$$
+        <p>
+            The remaining cost is the trace of the Jacobian, which is $O(D)$ backward passes &mdash;
+            prohibitive for images. Two workarounds were found: <em>sliced</em> score matching
+            (Hutchinson's estimator) and, far more importantly, <strong>denoising score matching</strong>
+            (Vincent, 2011). Perturb the data with Gaussian noise,
+            $\tilde x = x + \sigma \varepsilon$ with $\varepsilon \sim \mathcal{N}(0,I)$, and match the
+            score of the <em>noisy</em> distribution. Since
+            $\nabla_{\tilde x}\log q_\sigma(\tilde x \mid x) = -(\tilde x - x)/\sigma^2$ is available in
+            closed form, the objective becomes a plain regression:
+        </p>
+        $$J_{\text{DSM}}(\theta) = \mathbb{E}_{x \sim p_{\text{data}}}\,\mathbb{E}_{\varepsilon}
+        \left\Vert s_\theta(x + \sigma\varepsilon) + \frac{\varepsilon}{\sigma} \right\Vert^2 .$$
+
+        <div class="callout">
+            <p>
+                <strong>This is the hinge of the entire post.</strong> Denoising score matching is a
+                least-squares problem with no partition function, no latent integral, no adversary, and no
+                architectural constraint on the network. Written in 2011 as a way to train energy models,
+                it sat mostly unused until 2019&ndash;2020, when it was combined with a multi-scale noise
+                schedule and turned out to be all you need. Diffusion models are denoising score matching
+                run at many noise levels at once.
+            </p>
+        </div>
+
+        <h3>4.4 Neural autoregressive models and the Helmholtz machine</h3>
+
+        <p>
+            Two other threads from this era matter. First, Bengio's <strong>neural probabilistic language
+            model</strong> (2003) replaced the $n$-gram lookup table with an embedding plus MLP:
+            $p_\theta(x_t \mid x_{\lt t}) = \mathrm{softmax}\big(g_\theta(\mathbf{e}_{x_{t-n+1}},\dots,\mathbf{e}_{x_{t-1}})\big)$.
+            Contexts now live in $\mathbb{R}^d$ and share statistical strength; the exponential table is
+            gone. <strong>NADE</strong> (2011) applied the same idea to arbitrary binary vectors with
+            weight sharing across conditionals. The factorization is unchanged from &sect;3.1 &mdash; only
+            the function class changed.
+        </p>
+        <p>
+            Second, the <strong>Helmholtz machine</strong> (1995) and its <strong>wake&ndash;sleep</strong>
+            algorithm introduced a separate <em>recognition network</em> $q_\phi(z \mid x)$ trained
+            alongside the generative network $p_\theta(x \mid z)$: the wake phase updates $\theta$ using
+            latents inferred by $q_\phi$; the sleep phase updates $\phi$ on the generative model's own
+            dreams. This is amortized inference, eighteen years before the VAE. What was missing was a
+            single objective that both networks optimize and a low-variance way to backpropagate through
+            sampling.
+        </p>
+
+        <h2 id="era3">5. Era III &mdash; The deep generative era (2013&ndash;2019)</h2>
+
+        <h3>5.1 Variational autoencoders: amortized EM with a reparameterization</h3>
+
+        <p>
+            <strong>Setup.</strong> A continuous latent $z \in \mathbb{R}^d$ with a fixed prior
+            $p(z) = \mathcal{N}(0,I_d)$, and a neural decoder producing the parameters of the observation
+            model, e.g. $p_\theta(x \mid z) = \mathcal{N}\big(x; \mu_\theta(z), \sigma^2 I\big)$ for
+            images or a product of Bernoullis. Marginalizing $z$ is intractable (obstacle #2), and unlike
+            a mixture the posterior $p_\theta(z\mid x)$ has no closed form because $\mu_\theta$ is
+            nonlinear.
+        </p>
+
+        <h4>Training objective</h4>
+        <p>
+            Take the ELBO from &sect;3.2 and make $q$ the output of an <em>encoder network</em>:
+            $q_\phi(z \mid x) = \mathcal{N}\big(z; \mu_\phi(x), \operatorname{diag}\sigma^2_\phi(x)\big)$.
+            Rearranging the ELBO into its standard two-term form,
+        </p>
+        $$\mathcal{L}(\theta,\phi;x) =
+        \underbrace{\mathbb{E}_{q_\phi(z\mid x)}\big[\log p_\theta(x \mid z)\big]}_{\text{reconstruction}}
+        \;-\; \underbrace{D_{\mathrm{KL}}\big(q_\phi(z\mid x)\,\Vert\, p(z)\big)}_{\text{regularizer}}
+        \;\le\; \log p_\theta(x),$$
+        <p>
+            with the bound gap equal to $D_{\mathrm{KL}}(q_\phi(z\mid x)\Vert p_\theta(z\mid x))$. For
+            diagonal Gaussians the KL term is analytic,
+            $\tfrac12\sum_{j=1}^d\big(\mu_{\phi,j}^2 + \sigma_{\phi,j}^2 - \log\sigma_{\phi,j}^2 - 1\big)$,
+            so only the reconstruction term needs sampling.
+        </p>
+
+        <h4>The reparameterization trick</h4>
+        <p>
+            The obstacle to gradient descent is that $z$ is sampled from a distribution that depends on
+            $\phi$, so $\nabla_\phi \mathbb{E}_{q_\phi}[\,\cdot\,]$ cannot pass through the sampler.
+            Rewrite the sample as a deterministic function of a parameter-free noise variable:
+        </p>
+        $$z = \mu_\phi(x) + \sigma_\phi(x)\odot\varepsilon, \qquad \varepsilon \sim \mathcal{N}(0,I).$$
+        <p>
+            Now the randomness is in $\varepsilon$, which does not depend on $\phi$, and the gradient flows
+            straight through $\mu_\phi$ and $\sigma_\phi$. The resulting estimator has dramatically lower
+            variance than the score-function (REINFORCE) alternative, and that variance reduction &mdash;
+            not the ELBO, which was thirty years old &mdash; is what made the VAE work.
+        </p>
+
+        <div class="algo">
+            <div class="algo-title">Algorithm 4 &mdash; VAE training and sampling</div>
+<pre><code>Train:
+  repeat:
+    1. x        ~ minibatch from D
+    2. mu, logvar <- Encoder_phi(x)
+    3. eps      ~ N(0, I)
+    4. z        <- mu + exp(0.5*logvar) * eps            # reparameterization
+    5. L_rec    <- log p_theta(x | z)                    # e.g. -||x - Dec(z)||^2 or -BCE
+    6. L_kl     <- 0.5 * sum(mu^2 + exp(logvar) - logvar - 1)
+    7. loss     <- -(L_rec - beta * L_kl)                # beta = 1 is the exact ELBO
+    8. (theta, phi) <- Adam step on loss
+
+Sample:
+  1. z ~ N(0, I)
+  2. x <- Decoder_theta(z)        # or sample from p_theta(x|z); one forward pass</code></pre>
+        </div>
+
+        <h4>Inference / generation</h4>
+        <p>
+            Sampling is a single decoder pass from a prior draw &mdash; fast and simple. Density is only
+            available as the lower bound $\mathcal{L}$ (tightened, if needed, by importance weighting as
+            in IWAE). The encoder also gives you a useful representation for free, which is why VAEs
+            remain ubiquitous as <em>components</em> even where they lost as standalone image generators.
+        </p>
+
+        <h4>Failure modes, and what they teach</h4>
+        <ul>
+            <li>
+                <strong>Blurriness.</strong> With a Gaussian likelihood the reconstruction term is a
+                squared error, whose optimum is a conditional <em>mean</em>. Averaging over plausible
+                completions produces a blur. Combined with the mode-covering bias of forward KL from
+                &sect;2, VAE samples are smooth rather than sharp.
+            </li>
+            <li>
+                <strong>Posterior collapse.</strong> With a powerful autoregressive decoder, the model can
+                drive $q_\phi(z\mid x) \to p(z)$, zeroing the KL term and ignoring $z$ entirely. The
+                latent carries no information.
+            </li>
+        </ul>
+
+        <div class="callout">
+            <p>
+                <strong>Connection forward.</strong> Both failures come from asking one latent layer to do
+                everything in one jump. Stack many latents, $z_T \to z_{T-1} \to \dots \to z_1 \to x$, and
+                each step only has to make a small correction. Then <em>fix</em> the encoder to a simple
+                noising process instead of learning it. That model is a diffusion model, and its training
+                objective is derived from exactly this ELBO (&sect;6.2).
+            </p>
+        </div>
+
+        <h3>5.2 Generative adversarial networks: abandoning likelihood</h3>
+
+        <p>
+            <strong>Setup.</strong> Define the model <em>implicitly</em>. A generator
+            $G_\theta : \mathcal{Z}\to\mathcal{X}$ pushes a simple prior forward,
+            $x = G_\theta(z)$ with $z\sim p(z)$, inducing a distribution $p_\theta$ that you can sample
+            from but whose density you cannot evaluate &mdash; there is no $\log p_\theta(x)$ anywhere in
+            the method. Since likelihood is off the table, we need a different way to compare $p_\theta$
+            to $p_{\text{data}}$: <strong>train a critic to tell them apart</strong>.
+        </p>
+
+        <h4>Training objective</h4>
+        <p>
+            With a discriminator $D_\psi : \mathcal{X}\to(0,1)$, the two-player minimax game is
+        </p>
+        $$\min_{\theta}\max_{\psi}\; V(\theta,\psi) =
+        \mathbb{E}_{x\sim p_{\text{data}}}\big[\log D_\psi(x)\big]
+        + \mathbb{E}_{z\sim p(z)}\big[\log\big(1 - D_\psi(G_\theta(z))\big)\big].$$
+        <p>
+            For fixed $G_\theta$, the inner maximization has a closed-form solution obtained pointwise:
+        </p>
+        $$D^\star(x) = \frac{p_{\text{data}}(x)}{p_{\text{data}}(x) + p_\theta(x)},$$
+        <p>
+            and substituting it back shows what the generator is really minimizing:
+        </p>
+        $$V(\theta, \psi^\star) = 2\,D_{\mathrm{JS}}\big(p_{\text{data}} \,\Vert\, p_\theta\big) - \log 4 .$$
+        <p>
+            So a GAN performs <strong>distribution matching under Jensen&ndash;Shannon divergence</strong>
+            rather than forward KL. JS is symmetric and bounded, and in practice the generator behaves in
+            a <em>mode-seeking</em> way: it is not infinitely punished for ignoring a mode, only for
+            producing samples the critic can flag as fake. That is the sharpness/diversity trade-off in
+            one line, and it is the exact mirror image of the VAE's.
+        </p>
+        <p>
+            Two practical amendments matter. The <strong>non-saturating loss</strong> replaces the
+            generator's $\log(1-D)$ with $-\log D$, because early in training $D$ rejects everything and
+            the original loss has vanishing gradient. And <strong>Wasserstein GANs</strong> replace JS
+            with the earth-mover distance via the Kantorovich&ndash;Rubinstein dual,
+            $W_1(p_{\text{data}},p_\theta) = \sup_{\Vert f\Vert_L\le 1}\mathbb{E}_{p_{\text{data}}}[f] - \mathbb{E}_{p_\theta}[f]$,
+            enforced with weight clipping or a gradient penalty. Wasserstein distance gives useful
+            gradients even when the two distributions have disjoint support &mdash; the common case for
+            data on a low-dimensional manifold.
+        </p>
+
+        <div class="algo">
+            <div class="algo-title">Algorithm 5 &mdash; GAN training (non-saturating)</div>
+<pre><code>repeat:
+  # --- critic: n_critic steps (n_critic = 1 for vanilla GAN, ~5 for WGAN-GP)
+  for i = 1..n_critic:
+      x  ~ minibatch from D
+      z  ~ N(0, I)
+      L_D <- -( log D_psi(x) + log(1 - D_psi(G_theta(z))) )
+      psi <- Adam step on L_D
+
+  # --- generator: one step
+  z  ~ N(0, I)
+  L_G <- -log D_psi(G_theta(z))          # non-saturating; NOT +log(1 - D)
+  theta <- Adam step on L_G</code></pre>
+        </div>
+
+        <h4>Inference / generation</h4>
+        <p>
+            One forward pass: $z\sim\mathcal{N}(0,I)$, $x = G_\theta(z)$. This is the fastest sampler of
+            any family, and by 2019 StyleGAN had made it the best-looking one too. The price is that
+            there is no likelihood, no encoder (unless you add one), and training is a non-stationary
+            game rather than an optimization &mdash; hence <strong>mode collapse</strong> (the generator
+            maps many $z$ to one $x$), oscillation, and sensitivity to almost every hyperparameter.
+        </p>
+
+        <div class="callout">
+            <p>
+                <strong>Connection forward.</strong> GANs lost the frontier to diffusion around 2021 on
+                diversity and training stability, then came back as a <em>component</em>: the perceptual
+                and adversarial losses in VQGAN train the autoencoder that latent diffusion runs inside,
+                and adversarial objectives are now central to distilling multi-step diffusion samplers
+                into one- or two-step generators (&sect;7.3). The lasting contribution is conceptual:
+                <em>you can train a generative model by matching distributions rather than maximizing
+                likelihood</em>, and the choice of divergence is a design decision with visible
+                consequences.
+            </p>
+        </div>
+
+        <h3>5.3 Normalizing flows: exact likelihood by construction</h3>
+
+        <p>
+            <strong>Setup.</strong> Let $f_\theta : \mathcal{Z}\to\mathcal{X}$ be a <em>diffeomorphism</em>
+            &mdash; invertible and differentiable, with $\dim\mathcal{Z} = \dim\mathcal{X} = D$. Setting
+            $x = f_\theta(z)$ with $z\sim p_Z = \mathcal{N}(0,I)$, the change-of-variables formula gives
+            the density exactly:
+        </p>
+        $$\log p_\theta(x) = \log p_Z\big(f_\theta^{-1}(x)\big) + \log\left|\det \frac{\partial f_\theta^{-1}(x)}{\partial x}\right|.$$
+        <p>
+            No bound, no partition function, no latent integral. The catch is the $\log\det$ of a
+            $D\times D$ Jacobian, which naively costs $O(D^3)$; flows are therefore an exercise in
+            designing expressive maps whose Jacobian is triangular. The <strong>affine coupling
+            layer</strong> of NICE/RealNVP splits $x = (x_a, x_b)$ and transforms only half:
+        </p>
+        $$y_a = x_a, \qquad y_b = x_b \odot \exp\big(s_\theta(x_a)\big) + t_\theta(x_a),$$
+        <p>
+            which is trivially invertible and has $\log|\det J| = \sum_j s_\theta(x_a)_j$ regardless of how
+            complicated $s_\theta$ and $t_\theta$ are. Alternate which half is transformed, stack many
+            layers, and add $1\times1$ convolutions (Glow) to mix channels.
+        </p>
+
+        <h4>Training and sampling</h4>
+        <p>
+            Training is direct maximum likelihood: minimize $-\log p_\theta(x)$ averaged over a minibatch,
+            with both terms above computed in a single forward pass. Sampling is $z\sim p_Z$ followed by
+            $x = f_\theta(z)$. Flows are the only family that gives exact density <em>and</em> exact
+            one-pass sampling. What they give up is architecture: invertibility and dimension preservation
+            are severe constraints, and in practice flows need many more parameters than a VAE or
+            diffusion model of comparable quality.
+        </p>
+
+        <h4>Continuous normalizing flows</h4>
+        <p>
+            Take the number of layers to infinity and the residual step size to zero, and the stack of
+            coupling layers becomes an ODE:
+        </p>
+        $$\frac{dx_t}{dt} = v_\theta(x_t, t), \qquad x_0 \sim p_0 = \mathcal{N}(0,I),$$
+        <p>
+            with the density evolving according to the instantaneous change-of-variables (continuity)
+            equation
+        </p>
+        $$\frac{d}{dt}\log p_t(x_t) = -\nabla\!\cdot\! v_\theta(x_t,t) = -\operatorname{tr}\!\big(\nabla_x v_\theta(x_t,t)\big).$$
+        <p>
+            Now $v_\theta$ can be <em>any</em> network: invertibility comes free from the ODE, and the
+            $\log\det$ becomes a divergence (estimable with Hutchinson's trick). Beautiful &mdash; but
+            training by maximum likelihood requires integrating the ODE and backpropagating through the
+            solver on every step, which is slow and stiff. FFJORD works; it just costs too much.
+        </p>
+
+        <div class="callout">
+            <p>
+                <strong>Connection forward.</strong> Remember this: <em>the model is a velocity field, and
+                the expensive part is simulating the ODE during training</em>. Flow matching (&sect;7.1)
+                keeps the velocity field and deletes the simulation, by writing down a regression target
+                for $v_\theta$ in closed form. That one change turns CNFs from an elegant curiosity into a
+                state-of-the-art method.
+            </p>
+        </div>
+
+        <h3>5.4 Deep autoregressive models and the Transformer</h3>
+
+        <p>
+            <strong>Setup.</strong> Back to the exact chain rule of &sect;3.1, now with a deep conditional:
+        </p>
+        $$\log p_\theta(x) = \sum_{t=1}^{T}\log p_\theta\big(x_t \mid x_{\lt t}\big),
+        \qquad p_\theta(x_t \mid x_{\lt t}) = \mathrm{softmax}\big(W_o\, h_t\big),\;\; h_t = f_\theta(x_{\lt t}).$$
+        <p>
+            The design question is only how to compute the context representation $h_t$. RNNs and LSTMs
+            carry a recurrent state; PixelRNN/PixelCNN impose a raster-scan order on images with masked
+            convolutions; WaveNet uses dilated causal convolutions for audio; the Transformer uses causal
+            self-attention, in which $h_t$ attends over all of $x_{\lt t}$ with a learned, content-based
+            weighting.
+        </p>
+
+        <h4>Training objective</h4>
+        <p>
+            Plain maximum likelihood, which for discrete $x_t$ is token-level cross-entropy:
+        </p>
+        $$\mathcal{L}(\theta) = -\frac{1}{|\mathcal{B}|}\sum_{x\in\mathcal{B}}\sum_{t=1}^{T}
+        \log p_\theta\big(x_t \mid x_{\lt t}\big).$$
+        <p>
+            Two properties make this the most scalable objective in machine learning. First, the loss is
+            <em>exact</em> &mdash; no bound, no adversary, no MCMC, so the training curve means something
+            and improvements are monotone in a real quantity (perplexity, equivalently bits per token,
+            equivalently compression). Second, with causal masking all $T$ conditionals are computed in a
+            <strong>single parallel forward pass</strong> under teacher forcing: position $t$ predicts
+            $x_t$ while conditioning on the ground-truth prefix. That is the property that turned
+            likelihood training into a hardware-utilization problem, and it is the real reason
+            Transformers scaled.
+        </p>
+
+        <div class="algo">
+            <div class="algo-title">Algorithm 6 &mdash; Autoregressive Transformer: training and sampling</div>
+<pre><code>Train (one parallel pass over the whole sequence):
+  1. x = (x_1..x_T)  ~ minibatch
+  2. H     <- Transformer_theta(embed(x), causal_mask)    # H[t] sees only x_&lt;t
+  3. logits<- H @ W_o^T
+  4. loss  <- mean_t CrossEntropy(logits[t], x[t])        # teacher forcing
+  5. theta <- AdamW step on loss
+
+Sample (sequential; T passes, KV-cached):
+  1. context <- prompt ; cache <- {}
+  2. for t = 1..T:
+  3.     logits, cache <- Transformer_theta(last_token, cache)
+  4.     logits <- logits / tau                           # temperature
+  5.     logits <- top_k / top_p filter(logits)
+  6.     x[t] ~ Categorical(softmax(logits))
+  7.     if x[t] == EOS: break
+  8. return x</code></pre>
+        </div>
+
+        <h4>Inference / generation</h4>
+        <p>
+            Sampling is inherently sequential: $T$ forward passes, each depending on the last. Caching
+            keys and values makes each step cheap, but latency remains $O(T)$ &mdash; the exact mirror of
+            training's parallelism. Temperature $\tau$, top-$k$, and nucleus (top-$p$) truncation are
+            post-hoc corrections to the fact that a mode-covering, forward-KL-trained model puts real
+            probability mass on the long tail of bad continuations.
+        </p>
+        <p>
+            The other structural weakness is the fixed factorization order. A raster-scan image model
+            has no reason to believe pixel $(0,0)$ should be decided first, and errors made early are
+            never revised. This is precisely the weakness diffusion does not have: diffusion decides
+            <em>everything at once, coarse-to-fine</em>, and revisits its own output at every step. It is
+            also why autoregression stayed dominant for text (which really is sequential and discrete)
+            while losing images to diffusion.
+        </p>
+
+        <h2 id="era4">6. Era IV &mdash; The diffusion era (2020&ndash;2023)</h2>
+
+        <p>
+            The idea is disarmingly simple. Learning to map noise to data in one jump is hard; learning to
+            remove a <em>little</em> noise is easy. So define a fixed process that gradually destroys the
+            data, learn to reverse one small step of it, and generate by chaining many small reversals.
+            Diffusion converts one intractable problem into a thousand tractable regressions.
+        </p>
+
+        <h3>6.1 The forward process</h3>
+
+        <p>
+            <strong>Setup.</strong> Let $x_0 \sim p_{\text{data}}$ and define a Markov chain of increasing
+            corruption over $t = 1,\dots,T$ with a fixed variance schedule $\beta_t \in (0,1)$:
+        </p>
+        $$q(x_t \mid x_{t-1}) = \mathcal{N}\big(x_t;\, \sqrt{1-\beta_t}\,x_{t-1},\; \beta_t I\big).$$
+        <p>
+            Nothing here is learned. Because Gaussians compose, the $t$-step marginal is available in
+            closed form &mdash; the property the whole method depends on. With
+            $\alpha_t = 1-\beta_t$ and $\bar\alpha_t = \prod_{s\le t}\alpha_s$,
+        </p>
+        $$q(x_t \mid x_0) = \mathcal{N}\big(x_t;\, \sqrt{\bar\alpha_t}\,x_0,\; (1-\bar\alpha_t)I\big),
+        \qquad\text{i.e.}\qquad
+        x_t = \sqrt{\bar\alpha_t}\,x_0 + \sqrt{1-\bar\alpha_t}\,\varepsilon,\;\; \varepsilon\sim\mathcal{N}(0,I).$$
+        <p>
+            So we can jump to any noise level in one line of code, with no simulation. The schedule is
+            chosen so $\bar\alpha_T \approx 0$, making $q(x_T)\approx\mathcal{N}(0,I)$: the process
+            destroys all information and lands on a distribution we can sample from trivially.
+        </p>
+
+        <h3>6.2 Training objective: three derivations, one loss</h3>
+
+        <p>
+            The reverse of a Gaussian diffusion with small steps is itself approximately Gaussian, so we
+            parameterize $p_\theta(x_{t-1}\mid x_t) = \mathcal{N}\big(x_{t-1};\mu_\theta(x_t,t),\sigma_t^2 I\big)$
+            and fit it. Three different starting points converge on the same objective, which is why the
+            method feels inevitable.
+        </p>
+        <ul>
+            <li>
+                <strong>As a hierarchical VAE.</strong> Treat $x_{1:T}$ as latents with a <em>fixed</em>
+                encoder $q$. The ELBO of &sect;3.2 becomes
+                $\mathbb{E}_q\big[\log p(x_T) + \sum_t \log \frac{p_\theta(x_{t-1}\mid x_t)}{q(x_t\mid x_{t-1})}\big]$,
+                which rearranges into a sum of per-step KL divergences
+                $D_{\mathrm{KL}}\big(q(x_{t-1}\mid x_t,x_0)\,\Vert\,p_\theta(x_{t-1}\mid x_t)\big)$.
+                Both sides are Gaussian, so each KL is a squared difference of means.
+            </li>
+            <li>
+                <strong>As denoising score matching.</strong> Since $q(x_t\mid x_0)$ is Gaussian, its
+                conditional score is $\nabla_{x_t}\log q(x_t\mid x_0) = -\varepsilon/\sqrt{1-\bar\alpha_t}$,
+                and &sect;4.3's DSM objective applies directly at every noise level simultaneously.
+            </li>
+            <li>
+                <strong>As Tweedie's formula.</strong> For $x_t = \sqrt{\bar\alpha_t}x_0 + \sqrt{1-\bar\alpha_t}\varepsilon$,
+                the posterior mean satisfies
+                $\mathbb{E}[x_0\mid x_t] = \big(x_t + (1-\bar\alpha_t)\nabla_{x_t}\log p_t(x_t)\big)/\sqrt{\bar\alpha_t}$.
+                Predicting the noise, predicting the clean data, and predicting the score are three
+                reparameterizations of one quantity.
+            </li>
+        </ul>
+        <p>
+            Ho et al. showed that dropping the per-step weights from the ELBO gives a simpler and
+            empirically better objective &mdash; the loss that launched the era:
+        </p>
+        $$\boxed{\;\mathcal{L}_{\text{simple}}(\theta) =
+        \mathbb{E}_{t\sim\mathcal{U}\{1,T\}}\;\mathbb{E}_{x_0\sim p_{\text{data}}}\;\mathbb{E}_{\varepsilon\sim\mathcal{N}(0,I)}
+        \Big[\big\Vert \varepsilon - \varepsilon_\theta\big(\underbrace{\sqrt{\bar\alpha_t}x_0 + \sqrt{1-\bar\alpha_t}\varepsilon}_{x_t},\, t\big)\big\Vert^2\Big]\;}$$
+        <p>
+            Read what this is: <em>a mean-squared-error regression</em>. One network, one loss, no
+            adversary, no partition function, no encoder to learn, no ODE to integrate. The score is
+            recovered whenever you need it via
+            $s_\theta(x_t,t) = -\varepsilon_\theta(x_t,t)/\sqrt{1-\bar\alpha_t}$, and the
+            random choice of $t$ each step is what lets a single network cover all noise levels.
+        </p>
+
+        <div class="algo">
+            <div class="algo-title">Algorithm 7 &mdash; DDPM training and ancestral sampling</div>
+<pre><code>Train:
+  repeat:
+    1. x0  ~ D
+    2. t   ~ Uniform{1..T}
+    3. eps ~ N(0, I)
+    4. xt  <- sqrt(abar[t]) * x0 + sqrt(1 - abar[t]) * eps      # closed-form jump
+    5. loss<- || eps - eps_theta(xt, t) ||^2
+    6. theta <- Adam step on loss    (keep an EMA copy of theta for sampling)
+
+Sample (ancestral, T steps):
+  1. x_T ~ N(0, I)
+  2. for t = T..1:
+  3.     z <- N(0, I) if t > 1 else 0
+  4.     x_{t-1} <- (1/sqrt(alpha[t])) * ( x_t - (beta[t]/sqrt(1-abar[t])) * eps_theta(x_t, t) )
+                    + sigma[t] * z
+  5. return x_0</code></pre>
+        </div>
+
+        <h3>6.3 The SDE view and the probability-flow ODE</h3>
+
+        <p>
+            Song et al. showed that the discrete chain is a discretization of a stochastic differential
+            equation, $dx = f(x,t)\,dt + g(t)\,dw$, and that this SDE has an exactly reversible
+            counterpart driven by the score:
+        </p>
+        $$dx = \big[f(x,t) - g(t)^2\,\nabla_x \log p_t(x)\big]dt + g(t)\,d\bar w .$$
+        <p>
+            More useful still, there is a <em>deterministic</em> ODE with the same time-marginals
+            $p_t$ &mdash; the <strong>probability-flow ODE</strong>:
+        </p>
+        $$\frac{dx}{dt} = f(x,t) - \tfrac{1}{2}g(t)^2\,\nabla_x \log p_t(x)
+        \;\approx\; f(x,t) - \tfrac{1}{2}g(t)^2\, s_\theta(x,t).$$
+        <p>
+            Three consequences follow immediately, and they close several loops at once.
+        </p>
+        <ol>
+            <li>
+                A trained diffusion model <em>is</em> a continuous normalizing flow (&sect;5.3): integrate
+                the PF-ODE and you get exact likelihoods via the divergence formula. Diffusion trains a
+                CNF without ever simulating one.
+            </li>
+            <li>
+                Sampling is now an ODE-solving problem, so decades of numerical integration apply. DDIM,
+                DPM-Solver, and Heun-style solvers cut sampling from 1000 steps to 10&ndash;50 with no
+                retraining. This is where nearly all early inference-speed progress came from.
+            </li>
+            <li>
+                Deterministic sampling makes the map $x_T \mapsto x_0$ invertible, giving latent
+                interpolation and real-image editing &mdash; the properties GANs had and VAEs promised.
+            </li>
+        </ol>
+
+        <h3>6.4 Guidance and latent diffusion</h3>
+
+        <p>
+            <strong>Conditioning.</strong> To sample from $p(x\mid c)$ for a prompt $c$, Bayes' rule on
+            scores gives $\nabla_x \log p(x\mid c) = \nabla_x\log p(x) + \nabla_x\log p(c\mid x)$, which
+            classifier guidance implements with a separately trained classifier.
+            <strong>Classifier-free guidance</strong> removes the classifier by training one network with
+            the condition randomly dropped (say 10% of the time, replaced by a null token $\varnothing$)
+            and then extrapolating at sampling time:
+        </p>
+        $$\tilde\varepsilon_\theta(x_t,t,c) = \varepsilon_\theta(x_t,t,\varnothing)
+        + w\big[\varepsilon_\theta(x_t,t,c) - \varepsilon_\theta(x_t,t,\varnothing)\big], \qquad w \gt 1 .$$
+        <p>
+            This sharpens the conditional distribution &mdash; effectively sampling from something like
+            $p(x)p(c\mid x)^w$ &mdash; and trades diversity for prompt fidelity. It is the single most
+            important practical trick in text-to-image generation, and it is worth noticing that it is a
+            deliberate <em>departure</em> from maximum likelihood: we correct the mode-covering bias of
+            &sect;2 at inference time rather than at training time.
+        </p>
+        <p>
+            <strong>Latent diffusion.</strong> Running diffusion on $512\times512\times3$ pixels is
+            wasteful, because most of that capacity models imperceptible high-frequency detail. Latent
+            diffusion first trains an autoencoder (with perceptual and <em>adversarial</em> losses &mdash;
+            &sect;5.2 returning as a component) to compress images by roughly $8\times$ per side, then runs
+            the entire diffusion process in that latent space. A one- to two-order-of-magnitude compute
+            reduction is what made Stable Diffusion runnable on a consumer GPU, and the pattern
+            &mdash; <em>learn a compact space, then model the distribution inside it</em> &mdash; is now
+            standard for video and audio too.
+        </p>
+
+        <div class="callout">
+            <p>
+                <strong>Why diffusion won images.</strong> It inherits the stable regression objective of
+                score matching (no adversary), the multi-step refinement of hierarchical latents (no
+                blur), and a sampler that mixes across modes by construction rather than by luck (unlike
+                MCMC on an energy). The costs are inherently many network evaluations per sample and a
+                bias toward continuous data.
+            </p>
+        </div>
+
+        <h2 id="era5">7. Era V &mdash; Flow matching and hybrids (2022&ndash;)</h2>
+
+        <h3>7.1 Flow matching: regress the velocity, skip the simulation</h3>
+
+        <p>
+            <strong>Setup.</strong> Return to the CNF of &sect;5.3, whose model is a velocity field
+            $v_\theta(x,t)$. We want the ODE $dx_t/dt = v_\theta(x_t,t)$ to transport a simple $p_0$ into
+            $p_1 = p_{\text{data}}$. The ideal objective would be <strong>flow matching</strong>,
+        </p>
+        $$\mathcal{L}_{\text{FM}}(\theta) = \mathbb{E}_{t,\,x_t\sim p_t}\big\Vert v_\theta(x_t,t) - u_t(x_t)\big\Vert^2,$$
+        <p>
+            where $u_t$ is a vector field generating the desired path $p_t$ &mdash; but $u_t$ is unknown.
+            The key theorem is that we may replace it with a <em>conditional</em> field defined per
+            data point. Choose an interpolation between a noise sample $x_0\sim p_0$ and a data sample
+            $x_1\sim p_{\text{data}}$,
+        </p>
+        $$x_t = \alpha_t\, x_1 + \sigma_t\, x_0, \qquad \alpha_0 = 0,\;\alpha_1=1,\;\sigma_0=1,\;\sigma_1=0,$$
+        <p>
+            whose conditional velocity is immediate by differentiation,
+            $u_t(x_t \mid x_0,x_1) = \dot\alpha_t x_1 + \dot\sigma_t x_0$. Then the
+            <strong>conditional flow matching</strong> loss
+        </p>
+        $$\mathcal{L}_{\text{CFM}}(\theta) = \mathbb{E}_{t\sim\mathcal{U}[0,1]}\;\mathbb{E}_{x_0\sim p_0,\;x_1\sim p_{\text{data}}}
+        \Big\Vert v_\theta\big(\alpha_t x_1 + \sigma_t x_0,\; t\big) - \big(\dot\alpha_t x_1 + \dot\sigma_t x_0\big)\Big\Vert^2$$
+        <p>
+            has the <em>same gradients in $\theta$</em> as $\mathcal{L}_{\text{FM}}$. The reason is the
+            standard conditional-expectation argument: the minimizer of a squared error against a random
+            target is the conditional mean, and $\mathbb{E}[u_t(x_t\mid x_0,x_1)\mid x_t] = u_t(x_t)$.
+            The network never sees the intractable marginal field, but converges to it anyway.
+        </p>
+        <p>
+            <strong>Rectified flow</strong> is the simplest instance: take the straight line
+            $\alpha_t = t$, $\sigma_t = 1-t$, so $x_t = (1-t)x_0 + t x_1$ and the regression target is
+            just the constant displacement $x_1 - x_0$:
+        </p>
+        $$\mathcal{L}(\theta) = \mathbb{E}_{t,x_0,x_1}\big\Vert v_\theta\big((1-t)x_0 + t x_1,\, t\big) - (x_1 - x_0)\big\Vert^2 .$$
+
+        <div class="algo">
+            <div class="algo-title">Algorithm 8 &mdash; Rectified flow / conditional flow matching</div>
+<pre><code>Train:
+  repeat:
+    1. x1 ~ D                              # data
+    2. x0 ~ N(0, I)                        # noise (or any tractable source dist.)
+    3. t  ~ Uniform[0,1]                   # (logit-normal schedules work better in practice)
+    4. xt <- (1 - t) * x0 + t * x1
+    5. loss <- || v_theta(xt, t) - (x1 - x0) ||^2
+    6. theta <- Adam step on loss
+
+Sample (Euler, N steps; any ODE solver works):
+  1. x <- N(0, I) ; h <- 1/N
+  2. for i = 0..N-1:
+  3.     t <- i * h
+  4.     x <- x + h * v_theta(x, t)
+  5. return x</code></pre>
+        </div>
+
+        <p>
+            Set that beside Algorithm 7 and the punchline is clear: flow matching and diffusion are the
+            <strong>same algorithm with a different interpolation schedule and a different regression
+            target parameterization</strong>. Given a Gaussian source, one can convert between
+            $\varepsilon$-prediction, $x_0$-prediction, $v$-prediction, and score. What flow matching adds
+            is not a new capability but a cleaner formulation, and three real benefits: the path is a
+            design choice rather than an inherited SDE, straight paths are cheaper to integrate (fewer
+            steps for the same quality), and $p_0$ need not be Gaussian &mdash; you can flow between two
+            arbitrary distributions, which is what makes image-to-image and cross-modal transport natural.
+            The current generation of large image and video models is trained this way.
+        </p>
+
+        <h3>7.2 Few-step generation: distillation</h3>
+
+        <p>
+            The remaining weakness of transport-based models is that sampling needs many network
+            evaluations. Three families of fixes, all of which recycle earlier ideas:
+        </p>
+        <ul>
+            <li>
+                <strong>Consistency models</strong> train $f_\theta(x_t,t)$ to map <em>any</em> point on a
+                PF-ODE trajectory to the same endpoint, enforcing self-consistency
+                $f_\theta(x_t,t) = f_\theta(x_{t'},t')$ along a trajectory with the boundary condition
+                $f_\theta(x,0) = x$. One evaluation then jumps from noise to data.
+            </li>
+            <li>
+                <strong>Reflow</strong> retrains a rectified flow on its own
+                (noise, sample) pairs. Because the coupling is now deterministic rather than independent,
+                the induced paths straighten, and a straight path is exactly integrated by a single Euler
+                step.
+            </li>
+            <li>
+                <strong>Adversarial and distribution-matching distillation</strong> add a discriminator or
+                a reverse-KL score-difference term to a few-step student. This is &sect;5.2 returning as
+                the finishing tool: the GAN objective is excellent at making a fixed, small number of
+                steps produce sharp samples, and the diffusion teacher supplies the mode coverage the GAN
+                alone would lose.
+            </li>
+        </ul>
+
+        <h3>7.3 Discrete data: diffusion for text</h3>
+
+        <p>
+            Gaussian noise is meaningless on tokens, so discrete corruption processes replace it. The
+            approach that works is <strong>absorbing-state (masked) diffusion</strong>: the forward
+            process replaces each token independently with <code>[MASK]</code> with probability
+            increasing in $t$, and the model predicts the original tokens at masked positions. The
+            objective is a weighted cross-entropy over masked positions,
+        </p>
+        $$\mathcal{L}(\theta) = \mathbb{E}_{t\sim\mathcal{U}[0,1]}\left[\, w(t)\;\mathbb{E}_{x_t}
+        \sum_{i \,:\, x_t^i = \texttt{[MASK]}} -\log p_\theta\big(x_0^i \mid x_t\big)\right],$$
+        <p>
+            which is a principled variational bound and, notably, is BERT-style masked language modeling
+            generalized over all masking rates. Generation unmasks tokens progressively in any order,
+            trading the strict left-to-right constraint of &sect;5.4 for parallel decoding and the ability
+            to revise. Whether this displaces autoregression for language is, as of now, unsettled: the
+            AR objective still extracts more signal per token, but masked diffusion decodes many tokens
+            per pass.
+        </p>
+
+        <h3>7.4 Hybrids: what people actually deploy</h3>
+
+        <p>
+            No production system is a pure member of one family. The dominant patterns compose them:
+        </p>
+        <ul>
+            <li>
+                <strong>Autoencoder + diffusion</strong> (latent diffusion): a VAE/VQGAN compresses,
+                trained with adversarial and perceptual losses; a flow-matching or diffusion model handles
+                the distribution in latent space. Three families in one system.
+            </li>
+            <li>
+                <strong>Tokenizer + autoregression</strong> (VQ-VAE &rarr; VQGAN &rarr; discrete AR): a
+                vector-quantized autoencoder turns images into token sequences, then a Transformer models
+                them with cross-entropy. This is how the AR lineage competes on images, and how unified
+                multimodal models put pixels and text in one sequence.
+            </li>
+            <li>
+                <strong>Autoregressive backbone + diffusion head</strong>: a Transformer produces context
+                vectors and a small diffusion or flow head models the continuous distribution of the next
+                element, avoiding quantization loss while keeping sequential structure.
+            </li>
+            <li>
+                <strong>Diffusion teacher + adversarial student</strong>: as in &sect;7.2, for real-time
+                generation.
+            </li>
+        </ul>
+
+        <h2 id="unifying">8. The unifying picture</h2>
+
+        <p>
+            Strip away the architectures and every family is a choice of <em>what the network outputs</em>
+            and <em>how that output is scored against data</em>.
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:15%">Family</th>
+                    <th style="width:19%">Network represents</th>
+                    <th style="width:26%">Training objective</th>
+                    <th style="width:20%">Sampling</th>
+                    <th style="width:20%">Exact $\log p$?</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Count-based</td>
+                    <td>Conditional table $\theta_{w\mid c}$</td>
+                    <td>MLE in closed form (counts + smoothing)</td>
+                    <td>Ancestral, $T$ steps</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td>Energy-based</td>
+                    <td>Energy $E_\theta(x)$</td>
+                    <td>MLE gradient = positive &minus; negative phase; CD-$k$</td>
+                    <td>MCMC / Langevin, slow mixing</td>
+                    <td>No ($Z$ unknown)</td>
+                </tr>
+                <tr>
+                    <td>Latent (VAE)</td>
+                    <td>Decoder $p_\theta(x\mid z)$, encoder $q_\phi(z\mid x)$</td>
+                    <td>Maximize ELBO (reparameterized)</td>
+                    <td>1 pass from $p(z)$</td>
+                    <td>Lower bound only</td>
+                </tr>
+                <tr>
+                    <td>Adversarial</td>
+                    <td>Sampler $G_\theta(z)$ (implicit)</td>
+                    <td>Minimax; minimizes JS / Wasserstein</td>
+                    <td>1 pass from $p(z)$</td>
+                    <td>No density at all</td>
+                </tr>
+                <tr>
+                    <td>Autoregressive</td>
+                    <td>Conditional $p_\theta(x_t\mid x_{\lt t})$</td>
+                    <td>Exact MLE = cross-entropy, fully parallel</td>
+                    <td>Sequential, $T$ passes</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td>Normalizing flow</td>
+                    <td>Diffeomorphism $f_\theta$</td>
+                    <td>Exact MLE via change of variables</td>
+                    <td>1 pass from $p_Z$</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td>Diffusion / score</td>
+                    <td>Score $s_\theta$ or noise $\varepsilon_\theta$</td>
+                    <td>Denoising regression (weighted ELBO)</td>
+                    <td>Reverse SDE or PF-ODE, $N$ steps</td>
+                    <td>Yes, via PF-ODE</td>
+                </tr>
+                <tr>
+                    <td>Flow matching</td>
+                    <td>Velocity $v_\theta(x,t)$</td>
+                    <td>Conditional velocity regression</td>
+                    <td>ODE solve, few steps</td>
+                    <td>Yes, via the same ODE</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>The connections, stated plainly</h3>
+        <ol>
+            <li>
+                <strong>Counting $\to$ Transformers.</strong> Identical factorization
+                $\prod_t p(x_t\mid x_{\lt t})$, identical cross-entropy objective, identical ancestral
+                sampler. Only the estimator of the conditional changed &mdash; from a table to a function
+                that generalizes across contexts.
+            </li>
+            <li>
+                <strong>EM $\to$ VAE.</strong> The same ELBO. EM's E-step computes the exact posterior per
+                datapoint; the VAE amortizes an approximate posterior into a network and makes it
+                differentiable via reparameterization.
+            </li>
+            <li>
+                <strong>Energy $\to$ score $\to$ diffusion.</strong> Taking $\nabla_x$ of
+                $\log p_\theta = -E_\theta - \log Z$ annihilates $Z$, converting an intractable
+                normalization problem into a regression. Adding a noise schedule turns single-level
+                denoising score matching into diffusion, and turns slow-mixing MCMC into a fixed-length
+                reverse process that reaches all modes because it starts from pure noise.
+            </li>
+            <li>
+                <strong>VAE $\to$ diffusion.</strong> A diffusion model is a hierarchical VAE with
+                $T$ latents, a <em>fixed</em> non-learned encoder, and latents of the same dimension as the
+                data. Its loss is that ELBO with the per-step weights dropped.
+            </li>
+            <li>
+                <strong>CNF $\to$ flow matching.</strong> Same model object (a velocity field), same
+                sampler (an ODE solve). Flow matching removes ODE simulation from <em>training</em> by
+                supplying a closed-form conditional regression target.
+            </li>
+            <li>
+                <strong>Diffusion $\leftrightarrow$ flow matching.</strong> Two parameterizations of the
+                same transport. The probability-flow ODE of a diffusion model is a CNF; a Gaussian-source
+                flow-matching model is a diffusion model with a different schedule. Choosing straight
+                paths is what buys fewer sampling steps.
+            </li>
+            <li>
+                <strong>GAN $\to$ everything's last mile.</strong> The adversarial objective survives
+                inside the autoencoders that latent diffusion depends on, and inside the distillation
+                that makes few-step samplers sharp.
+            </li>
+        </ol>
+
+        <h3>Three things worth remembering</h3>
+        <p>
+            <strong>First, the objective determines the failure mode.</strong> Forward KL is mode-covering
+            and gives blur and a heavy tail of implausible samples; JS/Wasserstein under an adversary is
+            mode-seeking and gives sharpness with dropped modes; the denoising regression that underlies
+            diffusion and flow matching is likelihood-flavored but reweighted to emphasize the noise
+            levels that matter perceptually, which is why it gets both. Guidance and truncated sampling
+            are inference-time corrections applied on top &mdash; deliberate, useful departures from the
+            distribution the model was fit to.
+        </p>
+        <p>
+            <strong>Second, progress came from replacing intractable quantities with regressions.</strong>
+            The partition function, the posterior, the marginal velocity field: each was at some point the
+            blocker, and each was removed by finding an equivalent least-squares problem whose target is
+            computable from a single data point plus a single noise draw. That is the shape of nearly
+            every breakthrough above.
+        </p>
+        <p>
+            <strong>Third, the split that remains is data type, not method.</strong> Discrete and
+            genuinely sequential data (language, code) still belongs to autoregression, where the exact
+            chain rule and fully parallel teacher-forced training are hard to beat. Continuous,
+            high-dimensional, simultaneously-structured data (images, audio, video, molecules, protein
+            structure) belongs to transport &mdash; diffusion and flow matching &mdash; where
+            coarse-to-fine refinement beats committing to a scan order. The interesting frontier is where
+            the two meet: discrete diffusion pulling parallel decoding into language, and autoregressive
+            backbones with continuous heads pulling sequential structure into images and video.
+        </p>
+
+        <blockquote>
+            Seventy years, one question, and a short list of tricks used over and over: factorize with the
+            chain rule, bound with Jensen, differentiate away the normalizer, reparameterize the sampler,
+            and regress against a conditional target you can compute in closed form.
+        </blockquote>
     </article>
 
     <!-- Footer -->

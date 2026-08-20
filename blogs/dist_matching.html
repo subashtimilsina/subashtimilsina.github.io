@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Blog post by Subash Timilsina">
+    <meta name="description" content="How distribution matching works in deep learning: integral probability metrics, phi-divergences, MMD, Wasserstein, f-GAN, Sinkhorn, Stein discrepancies, and their modern uses in domain adaptation, diffusion distillation, and LLM distillation.">
     <meta name="author" content="Subash Timilsina">
-    <title>Test Blog 2 - Subash Timilsina</title>
+    <title>How to Do Distribution Matching - Subash Timilsina</title>
 
     <!-- Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,6 +17,22 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../style.css">
+
+    <!-- MathJax -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                tags: 'none'
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
 
     <style>
         .blog-post {
@@ -46,15 +62,39 @@
         }
         .blog-post h1 {
             font-size: 2.4rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
             text-align: center;
             letter-spacing: -0.015em;
         }
+        .blog-post .subtitle {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 1.05rem;
+            font-style: italic;
+            margin-bottom: 2.5rem;
+        }
         .blog-post h2 {
-            font-size: 1.4rem;
-            margin-top: 2.5rem;
+            font-size: 1.5rem;
+            margin-top: 3rem;
             margin-bottom: 0.8rem;
             font-weight: 600;
+            padding-bottom: 0.35rem;
+            border-bottom: 1px solid var(--hairline);
+        }
+        .blog-post h3 {
+            font-size: 1.15rem;
+            margin-top: 2rem;
+            margin-bottom: 0.6rem;
+            font-weight: 600;
+        }
+        .blog-post h4 {
+            font-size: 0.82rem;
+            margin-top: 1.4rem;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            color: var(--text-light);
         }
         .blog-post p {
             font-size: 1.05rem;
@@ -65,6 +105,7 @@
         .blog-post li {
             font-size: 1.05rem;
             line-height: 1.75;
+            margin-bottom: 0.35rem;
         }
         .blog-post ul, .blog-post ol {
             margin: 0 0 1rem 1.5rem;
@@ -83,7 +124,8 @@
             border: 1px solid var(--hairline);
             overflow-x: auto;
             margin: 1.2rem 0;
-            font-size: 0.88rem;
+            font-size: 0.82rem;
+            line-height: 1.6;
         }
         .blog-post pre code {
             background: none;
@@ -95,6 +137,104 @@
             color: var(--text-light);
             margin: 1.5rem 0;
             font-style: italic;
+        }
+
+        /* Table of contents */
+        .toc {
+            border: 1px solid var(--hairline);
+            border-radius: 3px;
+            padding: 1.2rem 1.5rem 1rem;
+            margin: 2rem 0 2.5rem;
+            background: var(--code-bg);
+        }
+        .toc h4 { margin-top: 0; }
+        .toc ol { margin-left: 1.2rem; margin-bottom: 0; }
+        .toc li { font-size: 0.95rem; line-height: 1.6; }
+        .toc a { border: none; }
+
+        /* Tables */
+        .blog-post table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.4rem 0;
+            font-size: 0.95rem;
+            display: block;
+            overflow-x: auto;
+            white-space: normal;
+        }
+        .blog-post th, .blog-post td {
+            border-bottom: 1px solid var(--hairline);
+            padding: 0.55rem 0.7rem;
+            text-align: left;
+            vertical-align: top;
+            line-height: 1.55;
+        }
+        .blog-post th {
+            font-weight: 600;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: var(--text-light);
+            border-bottom: 1px solid var(--text-light);
+        }
+
+        /* Algorithm boxes */
+        .algo {
+            border: 1px solid var(--hairline);
+            border-left: 3px solid var(--accent);
+            border-radius: 3px;
+            margin: 1.4rem 0;
+            overflow: hidden;
+        }
+        .algo .algo-title {
+            font-size: 0.76rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+            padding: 0.5rem 1.1rem;
+            border-bottom: 1px solid var(--hairline);
+            color: var(--text-light);
+            background: var(--code-bg);
+        }
+        .algo pre {
+            margin: 0;
+            border: none;
+            border-radius: 0;
+            background: transparent;
+        }
+
+        /* Key-idea callout */
+        .callout {
+            border: 1px solid var(--hairline);
+            border-radius: 3px;
+            padding: 0.9rem 1.2rem;
+            margin: 1.5rem 0;
+            background: var(--code-bg);
+        }
+        .callout p { margin-bottom: 0; font-size: 1rem; }
+        .callout p + p { margin-top: 0.7rem; }
+
+        .blog-post mjx-container[display="true"] {
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 3px 1px;
+        }
+
+        /* References */
+        .refs { margin-left: 0; list-style: none; }
+        .refs li {
+            font-size: 0.93rem;
+            line-height: 1.6;
+            margin-bottom: 0.55rem;
+            padding-left: 2.6rem;
+            text-indent: -2.6rem;
+            color: var(--text-light);
+        }
+        .refs a { border: none; }
+        .refs .rid {
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 0.8rem;
+            color: var(--text-lighter);
         }
     </style>
 </head>
@@ -126,40 +266,1034 @@
             ← Back to all blogs
         </a>
 
-        <p class="post-meta">Draft &middot; <time datetime="2026-01-01">January 1, 2026</time></p>
-        <h1>Test Blog 2</h1>
-
-        <p>
-            This is a placeholder blog post. Replace this content with your own writing.
+        <p class="post-meta"><time datetime="2026-05-19">May 19, 2026</time></p>
+        <h1>How to Do Distribution Matching</h1>
+        <p class="subtitle">
+            Differences, ratios, and the awkward fact that you only have samples.
         </p>
 
-        <h2>Introduction</h2>
         <p>
-            Start your post here. You can use standard HTML tags such as
-            <code>&lt;h2&gt;</code>, <code>&lt;p&gt;</code>, <code>&lt;ul&gt;</code>,
-            <code>&lt;blockquote&gt;</code>, <code>&lt;pre&gt;&lt;code&gt;</code>, and images.
+            A surprising number of problems in deep learning reduce to the same statement: <em>make this
+            distribution look like that one</em>. Train a generator so its samples look like data. Train
+            an encoder so features from two domains are indistinguishable. Train a one-step student so it
+            produces the same distribution as a fifty-step diffusion teacher. Train a small language model
+            to match a large one. Align a policy with a reward-tilted reference. Compress a dataset into a
+            handful of synthetic examples with the same statistics.
+        </p>
+        <p>
+            All of these are the problem
+        </p>
+        $$\min_{\theta}\; D\big(P \,\Vert\, Q_\theta\big),$$
+        <p>
+            where $P$ is a target we can only sample from and $Q_\theta$ is a model we control. The whole
+            difficulty is that $D$ is defined in terms of densities we do not have. This post is about the
+            machinery people use to get around that, starting from the taxonomy that organizes it
+            &mdash; comparing distributions by <strong>difference</strong> or by <strong>ratio</strong>
+            &mdash; and ending with where each choice shows up in systems today.
         </p>
 
-        <h2>Sample formatting</h2>
-        <ol>
-            <li>Numbered item one.</li>
-            <li>Numbered item two.</li>
-            <li>Numbered item three.</li>
-        </ol>
+        <div class="toc">
+            <h4>Contents</h4>
+            <ol>
+                <li><a href="#setup">The problem and the notation</a></li>
+                <li><a href="#two-ways">Two ways to compare: difference and ratio</a></li>
+                <li><a href="#why-matters">Why the choice matters: a two-line counterexample</a></li>
+                <li><a href="#ipm">Integral probability metrics in detail</a></li>
+                <li><a href="#fdiv">$\phi$-divergences and the density-ratio trick</a></li>
+                <li><a href="#estimation">Estimation: where the real difficulty lives</a></li>
+                <li><a href="#algorithms">Algorithms: GMMN, WGAN, MMD-GAN, f-GAN, Sinkhorn</a></li>
+                <li><a href="#critic-free">Critic-free matching: scores and transport</a></li>
+                <li><a href="#beyond">Distribution matching beyond generative modeling</a></li>
+                <li><a href="#practical">A practical guide to choosing</a></li>
+                <li><a href="#refs">References</a></li>
+            </ol>
+        </div>
 
-        <blockquote>
-            A short quote or a key idea you want to highlight.
-        </blockquote>
+        <h2 id="setup">1. The problem and the notation</h2>
 
-        <pre><code>// Code block example
-function add(a, b) {
-    return a + b;
-}</code></pre>
-
-        <h2>Conclusion</h2>
         <p>
-            Wrap up your post here.
+            Let $\mathcal{X}$ be the sample space. We have two distributions on it: a target $P$, given
+            through samples $x_1,\dots,x_n \sim P$, and a model $Q_\theta$ that we can sample from, usually
+            by pushing a simple prior through a network, $y = g_\theta(z)$ with $z \sim \mathcal{N}(0,I)$.
+            We want to move $\theta$ so that $Q_\theta$ approaches $P$.
         </p>
+        <p>
+            Three properties determine whether a given discrepancy $D$ is usable for this. It must be a
+            <strong>valid divergence</strong> ($D(P,Q) \ge 0$ with equality iff $P = Q$, at least for the
+            distributions we care about); it must be <strong>estimable from finite samples</strong>,
+            because that is all we have; and &mdash; most restrictive of all &mdash; the map
+            $\theta \mapsto D(P, Q_\theta)$ must be <strong>continuous and differentiable with useful
+            gradients</strong>. Section 3 is about how badly the third condition can fail.
+        </p>
+
+        <h4>Notation</h4>
+        <table>
+            <thead>
+                <tr><th style="width:24%">Symbol</th><th>Meaning</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>$P, Q$</td><td>Two probability distributions on $\mathcal{X}$; $p, q$ their densities when they exist.</td></tr>
+                <tr><td>$Q_\theta$, $g_\theta$</td><td>Model distribution and the generator that produces it, $y = g_\theta(z)$, $z \sim p(z)$.</td></tr>
+                <tr><td>$\mathcal{F}$</td><td>The <em>witness</em> or <em>critic</em> class: a set of functions $f : \mathcal{X}\to\mathbb{R}$.</td></tr>
+                <tr><td>$f_\psi$</td><td>A critic parameterized by a network with weights $\psi$.</td></tr>
+                <tr><td>$\Vert f\Vert_L$</td><td>Lipschitz seminorm, $\sup_{x \ne y}\, |f(x)-f(y)| / \Vert x-y\Vert$.</td></tr>
+                <tr><td>$k$, $\mathcal{H}_k$</td><td>A positive-definite kernel and its reproducing-kernel Hilbert space (RKHS).</td></tr>
+                <tr><td>$\mu_P$</td><td>Kernel mean embedding, $\mu_P = \mathbb{E}_{X\sim P}[k(\cdot, X)] \in \mathcal{H}_k$.</td></tr>
+                <tr><td>$\Pi(P,Q)$</td><td>Couplings: joint distributions on $\mathcal{X}\times\mathcal{X}$ with marginals $P$ and $Q$.</td></tr>
+                <tr><td>$\phi$, $\phi^*$</td><td>A convex generator with $\phi(1)=0$, and its convex conjugate $\phi^*(t) = \sup_u\{ut - \phi(u)\}$.</td></tr>
+                <tr><td>$r(x)$</td><td>The density ratio $p(x)/q(x)$ &mdash; the central object of &sect;5.</td></tr>
+                <tr><td>$s_P(x)$</td><td>The score $\nabla_x \log p(x)$ &mdash; the central object of &sect;8.</td></tr>
+            </tbody>
+        </table>
+
+        <h2 id="two-ways">2. Two ways to compare: difference and ratio</h2>
+
+        <p>
+            To compare two numbers you either subtract them or divide them. Remarkably, that naive
+            dichotomy is a real taxonomy for probability discrepancies, and it is the one Müller
+            formalized <a href="#r-muller">[1]</a>.
+        </p>
+
+        <h3>2.1 Integral probability metrics: take the difference</h3>
+
+        <p>
+            You cannot subtract two distributions directly, but you can subtract the expectations they
+            assign to a test function. Pick a class $\mathcal{F}$ of <em>witness functions</em> and look
+            for the one that separates them most:
+        </p>
+        $$D_{\mathcal{F}}(P,Q) \;=\; \sup_{f \in \mathcal{F}}\;\Big|\, \mathbb{E}_{X\sim P}[f(X)] - \mathbb{E}_{Y\sim Q}[f(Y)] \,\Big|.$$
+        <p>
+            If $\mathcal{F}$ is symmetric ($f \in \mathcal{F} \Rightarrow -f \in \mathcal{F}$), which all
+            the classes below are, the absolute value can be dropped. The maximizing $f$ is the
+            <strong>witness function</strong>: it is large where $P$ has more mass than $Q$ and small where
+            the reverse holds, so it is literally a picture of <em>how</em> the two differ.
+        </p>
+        <p>
+            Everything about an IPM is decided by $\mathcal{F}$, and the choices are exactly the
+            well-known metrics:
+        </p>
+        <table>
+            <thead>
+                <tr><th style="width:30%">Witness class $\mathcal{F}$</th><th style="width:26%">Resulting IPM</th><th>Comment</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>$\Vert f\Vert_L \le 1$</td><td>Wasserstein-1 $W_1$</td><td>Kantorovich&ndash;Rubinstein dual of earth-mover's distance.</td></tr>
+                <tr><td>$\Vert f\Vert_{\mathcal{H}_k} \le 1$</td><td>Maximum mean discrepancy</td><td>The sup has a <em>closed form</em>. This is the crucial practical difference.</td></tr>
+                <tr><td>$\Vert f\Vert_\infty \le 1$</td><td>Total variation (times 2)</td><td>Too strong: sees any difference in support.</td></tr>
+                <tr><td>$\Vert f\Vert_\infty + \Vert f\Vert_L \le 1$</td><td>Dudley metric</td><td>Metrizes weak convergence.</td></tr>
+                <tr><td>Indicators of half-spaces</td><td>Kolmogorov&ndash;Smirnov</td><td>The classical one-dimensional two-sample test.</td></tr>
+                <tr><td>$\{f_\psi : \psi \in \Psi\}$, a network</td><td>"Neural net distance"</td><td>What a GAN critic actually computes. See &sect;4.4 for the catch.</td></tr>
+            </tbody>
+        </table>
+        <p>
+            The reason IPMs are attractive for deep learning is visible in the definition: it only ever
+            involves <em>expectations</em>, which are exactly what samples estimate. No density appears
+            anywhere.
+        </p>
+
+        <h3>2.2 $\phi$-divergences: take the ratio</h3>
+
+        <p>
+            The other option is to compare $P$ and $Q$ pointwise through their ratio, then average the
+            result under $Q$ with some convex penalty $\phi$ (convex, with $\phi(1)=0$):
+        </p>
+        $$D_\phi(P,Q) \;=\; \int_{\mathcal{X}} q(x)\, \phi\!\left(\frac{p(x)}{q(x)}\right) dx
+        \;=\; \mathbb{E}_{Q}\!\left[\phi\big(r(X)\big)\right].$$
+        <p>
+            Convexity plus Jensen gives $D_\phi \ge \phi(1) = 0$ immediately. Different $\phi$ recover
+            every classical divergence:
+        </p>
+        <table>
+            <thead>
+                <tr><th style="width:26%">Divergence</th><th style="width:30%">Generator $\phi(u)$</th><th>Behaviour</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Kullback&ndash;Leibler $\mathrm{KL}(P\Vert Q)$</td><td>$u\log u$</td><td>Mass-covering; $+\infty$ if $Q$ misses support of $P$.</td></tr>
+                <tr><td>Reverse KL $\mathrm{KL}(Q \Vert P)$</td><td>$-\log u$</td><td>Mode-seeking; $+\infty$ if $Q$ puts mass where $P$ has none.</td></tr>
+                <tr><td>Jensen&ndash;Shannon</td><td>$u\log\frac{2u}{u+1} + \log\frac{2}{u+1}$</td><td>Symmetric, bounded by $\log 4$. What the vanilla GAN minimizes.</td></tr>
+                <tr><td>Squared Hellinger</td><td>$(\sqrt{u}-1)^2$</td><td>Bounded, symmetric, a true metric after a square root.</td></tr>
+                <tr><td>Pearson $\chi^2$</td><td>$(u-1)^2$</td><td>Heavily penalizes $q \ll p$; high variance to estimate.</td></tr>
+                <tr><td>Total variation</td><td>$\tfrac12|u-1|$</td><td>The one member of both families.</td></tr>
+            </tbody>
+        </table>
+        <p>
+            Note the structural problem, which is the mirror image of the IPM's virtue: $D_\phi$ is
+            written in terms of $r = p/q$, a quantity that <em>cannot be estimated from samples without
+            an additional model</em>. Section 5 is about how to get it anyway.
+        </p>
+
+        <h3>2.3 Total variation sits in the intersection</h3>
+
+        <p>
+            Total variation is the largest possible disagreement in probability that $P$ and $Q$ assign to
+            any single event:
+        </p>
+        $$\delta(P,Q) = \sup_{A \in \mathcal{F}_{\!\sigma}} \big|P(A) - Q(A)\big| = \tfrac12\int |p(x)-q(x)|\,dx .$$
+        <p>
+            It is an IPM (take $\mathcal{F}$ to be indicators of measurable sets, or bounded functions)
+            and a $\phi$-divergence ($\phi(u) = \frac12|u-1|$). Sriperumbudur et al.
+            <a href="#r-sri">[2]</a> showed this is essentially the <em>only</em> overlap: the two families
+            meet at TV and nowhere else. That is worth internalizing, because it means the two
+            constructions really are different tools and not two views of one thing.
+        </p>
+        <p>
+            TV also shows why "valid divergence" is not the same as "useful objective." TV is a perfectly
+            good metric that is useless for gradient descent, for the reason in the next section.
+        </p>
+
+        <h2 id="why-matters">3. Why the choice matters: a two-line counterexample</h2>
+
+        <p>
+            Here is the example from the WGAN paper <a href="#r-wgan">[3]</a>, and it is the single
+            clearest argument in this whole literature. Let $Z \sim \mathcal{U}[0,1]$ and consider two
+            distributions on $\mathbb{R}^2$: $P_0$ is the law of $(0, Z)$ &mdash; a vertical unit segment
+            at the origin &mdash; and $P_\theta$ is the law of $(\theta, Z)$, the same segment shifted
+            horizontally by $\theta$. Two parallel lines. As $\theta \to 0$ they visibly converge, so any
+            sane notion of distance should shrink continuously to zero.
+        </p>
+        <p>
+            Compute what each discrepancy actually reports. For $\theta \ne 0$ the two segments have
+            <strong>disjoint support</strong>, and:
+        </p>
+        $$D_{\mathrm{JS}}(P_\theta, P_0) = \begin{cases}\log 2 & \theta \ne 0\\ 0 & \theta = 0\end{cases}
+        \qquad
+        \mathrm{KL}(P_\theta \Vert P_0) = \mathrm{KL}(P_0 \Vert P_\theta) = \begin{cases}+\infty & \theta \ne 0\\ 0 & \theta = 0\end{cases}$$
+        $$\delta(P_\theta, P_0) = \begin{cases}1 & \theta \ne 0\\ 0 & \theta = 0\end{cases}
+        \qquad\text{but}\qquad
+        \boxed{\,W_1(P_\theta, P_0) = |\theta|\,}$$
+        <p>
+            The $\phi$-divergences are <em>constant</em> in $\theta$ (or infinite), so
+            $\partial D/\partial\theta = 0$ almost everywhere: gradient descent receives no information
+            about which way to move. Wasserstein gives $|\theta|$, whose derivative is $\pm 1$ &mdash;
+            exactly the signal you want. The reason is structural. A $\phi$-divergence reads
+            $P$ and $Q$ <em>pointwise</em> through $p/q$, so it is blind to how far apart the supports are;
+            an IPM's witness function is <em>constrained to be smooth</em>, so it cannot spike arbitrarily
+            and must report distance in the geometry of $\mathcal{X}$.
+        </p>
+
+        <div class="callout">
+            <p>
+                <strong>Why this is not a contrived example.</strong> Natural image data is widely believed
+                to lie on a low-dimensional manifold in pixel space, and a generator
+                $g_\theta : \mathbb{R}^{d}\to\mathbb{R}^{D}$ with $d \ll D$ produces samples supported on a
+                $d$-dimensional manifold too. Two such manifolds in a high-dimensional ambient space
+                generically intersect in a set of measure zero &mdash; that is, they are
+                <em>almost always disjoint</em>. The pathological case is the typical case, which is why
+                the original GAN's discriminator saturates: once $D$ can separate real from fake perfectly,
+                the generator's gradient vanishes.
+            </p>
+        </div>
+
+        <p>
+            The same argument disqualifies MMD if the kernel is chosen badly. A Gaussian kernel
+            $k(x,y) = \exp(-\Vert x-y\Vert^2 / 2\sigma^2)$ with $\sigma$ much smaller than the typical
+            inter-point distance evaluates to $\approx 0$ for every cross pair, so
+            $\widehat{\mathrm{MMD}}^2 \to$ constant and the witness function is a sum of narrow bumps with
+            no gradient in between. Bandwidth is not a tuning detail; it is what decides whether the
+            metric is smooth on the scale of your data.
+        </p>
+
+        <h2 id="ipm">4. Integral probability metrics in detail</h2>
+
+        <h3>4.1 Wasserstein distance and optimal transport</h3>
+
+        <p>
+            The primal definition is a transport problem: how much work does it take to rearrange the pile
+            of dirt $P$ into the pile $Q$?
+        </p>
+        $$W_p(P,Q)^p = \inf_{\gamma \in \Pi(P,Q)}\; \mathbb{E}_{(x,y)\sim\gamma}\big[\Vert x - y\Vert^p\big].$$
+        <p>
+            The infimum runs over all <em>couplings</em> &mdash; joint distributions whose marginals are
+            $P$ and $Q$ &mdash; each of which is a transport plan saying how much mass moves from $x$ to
+            $y$. This is a linear program, and for $p = 1$ its dual is
+            <strong>Kantorovich&ndash;Rubinstein duality</strong> <a href="#r-basso">[4]</a>:
+        </p>
+        $$W_1(P,Q) = \sup_{\Vert f\Vert_L \le 1}\; \mathbb{E}_P[f(X)] - \mathbb{E}_Q[f(Y)],
+        \qquad \Vert f\Vert_L := \sup_{x\ne y}\frac{|f(x)-f(y)|}{\Vert x - y\Vert}.$$
+        <p>
+            The dual is what makes $W_1$ trainable: the transport plan (an $n\times n$ object) disappears
+            and is replaced by a single scalar function that a network can represent. Two things follow
+            that shape everything downstream. First, <em>the critic must be Lipschitz</em>, and enforcing
+            that constraint is the entire engineering problem of &sect;7.2. Second, the sup is over an
+            enormous class, so in practice the network never attains it, and what we optimize is a lower
+            bound of unknown tightness.
+        </p>
+
+        <h3>4.2 Maximum mean discrepancy</h3>
+
+        <p>
+            Now take $\mathcal{F}$ to be the unit ball of an RKHS $\mathcal{H}_k$. Something very
+            convenient happens. By the reproducing property $f(x) = \langle f, k(\cdot,x)\rangle$, so
+        </p>
+        $$\mathbb{E}_P[f(X)] - \mathbb{E}_Q[f(Y)] = \big\langle f,\; \mu_P - \mu_Q \big\rangle_{\mathcal{H}_k},
+        \qquad \mu_P := \mathbb{E}_{X\sim P}\big[k(\cdot, X)\big].$$
+        <p>
+            Maximizing a linear functional over a unit ball is trivial &mdash; align $f$ with the vector
+            &mdash; so the supremum is attained in closed form by
+            $f^\star \propto \mu_P - \mu_Q$, giving
+        </p>
+        $$\mathrm{MMD}(P,Q) = \sup_{\Vert f\Vert_{\mathcal{H}_k}\le 1} \mathbb{E}_P[f] - \mathbb{E}_Q[f]
+        = \big\Vert \mu_P - \mu_Q \big\Vert_{\mathcal{H}_k}.$$
+        <p>
+            Expanding the squared norm turns it into three expectations of the kernel, with no
+            optimization at all <a href="#r-gretton">[5]</a>:
+        </p>
+        $$\mathrm{MMD}^2(P,Q) = \mathbb{E}_{X,X'\sim P}\,k(X,X') + \mathbb{E}_{Y,Y'\sim Q}\,k(Y,Y') - 2\,\mathbb{E}_{X\sim P, Y\sim Q}\,k(X,Y).$$
+        <p>
+            This is the single most useful formula in the sample-based-comparison toolbox: <strong>an IPM
+            whose supremum you never have to solve for</strong>. Given a batch of $n$ real and $m$
+            generated points, the plug-in (V-statistic) estimator is
+        </p>
+        $$\widehat{\mathrm{MMD}}^2 = \frac{1}{n^2}\sum_{i,j} k(x_i, x_j) + \frac{1}{m^2}\sum_{i,j}k(y_i,y_j)
+        - \frac{2}{nm}\sum_{i,j}k(x_i,y_j),$$
+        <p>
+            and dropping the diagonal terms $i = j$ from the first two sums gives the standard
+            <em>unbiased</em> U-statistic version. Everything is differentiable in $\theta$ through
+            $y_j = g_\theta(z_j)$.
+        </p>
+        <p>
+            MMD is a genuine metric &mdash; $\mathrm{MMD}(P,Q) = 0 \iff P = Q$ &mdash; precisely when $k$
+            is <strong>characteristic</strong>, meaning $P \mapsto \mu_P$ is injective. Gaussian and
+            Laplace kernels are characteristic on $\mathbb{R}^d$; a linear kernel is not (it only matches
+            means), and a polynomial kernel of degree $d$ only matches moments up to order $d$. There is a
+            nice way to see what MMD is doing: expand the Gaussian kernel and it compares an infinite
+            weighted collection of moments at once. Distribution matching by moment matching, with the
+            kernel choosing the weighting.
+        </p>
+
+        <h3>4.3 Energy distance, Cramér, and the sliced trick</h3>
+
+        <p>
+            Two useful relatives. The <strong>energy distance</strong>
+        </p>
+        $$\mathcal{E}(P,Q) = 2\,\mathbb{E}\Vert X - Y\Vert - \mathbb{E}\Vert X - X'\Vert - \mathbb{E}\Vert Y - Y'\Vert$$
+        <p>
+            looks like a different object but is exactly an MMD with the kernel
+            $k(x,y) = \Vert x\Vert + \Vert y\Vert - \Vert x - y\Vert$ <a href="#r-sejdinovic">[6]</a> &mdash;
+            the statistics and machine learning literatures independently invented the same quantity. Its
+            one-dimensional version is the Cramér distance, which motivated Cramér GAN
+            <a href="#r-cramer">[7]</a>; the selling point there is that unlike the Wasserstein estimator,
+            the Cramér estimator has <em>unbiased sample gradients</em>.
+        </p>
+        <p>
+            The <strong>sliced Wasserstein distance</strong> exploits the fact that in one dimension,
+            optimal transport is just sorting ($W_p$ between 1-D empirical distributions is a
+            sort followed by a sum). Project onto random directions and average:
+        </p>
+        $$\mathrm{SW}_p^p(P,Q) = \int_{\mathbb{S}^{d-1}} W_p^p\big(\pi^\omega_\# P,\; \pi^\omega_\# Q\big)\, d\omega
+        \;\approx\; \frac{1}{L}\sum_{\ell=1}^{L} W_p^p\big(\pi^{\omega_\ell}_\# P,\; \pi^{\omega_\ell}_\# Q\big).$$
+        <p>
+            Cost is $O(Ln\log n)$ with no critic and no adversarial game. It is a valid metric, but the
+            number of random projections needed to detect a difference grows badly with dimension, so it
+            is used mostly in latent spaces or as an auxiliary loss.
+        </p>
+
+        <h3>4.4 The neural net distance and its catch</h3>
+
+        <p>
+            In practice nobody optimizes over all 1-Lipschitz functions; they optimize over
+            $\{f_\psi\}$, a finite-capacity network with some constraint. Arora et al.
+            <a href="#r-arora">[8]</a> analyzed this "neural net distance" and found a genuinely worrying
+            result: with a critic of bounded capacity, $D_{\text{nn}}(P, Q_\theta)$ can be
+            <em>near zero even when $P$ and $Q_\theta$ are wildly different</em>. Concretely, a
+            distribution supported on only $O(\text{capacity}/\epsilon^2)$ points can fool the critic into
+            reporting $\epsilon$-closeness. The metric you optimize is not the metric you named, and
+            <strong>a low critic loss is not evidence of a good generator</strong> &mdash; it may be
+            evidence of mode collapse the critic cannot see.
+        </p>
+        <p>
+            This is a general lesson about adversarial distribution matching. The sup in an IPM is a
+            promise you cannot keep with a finite network, and the gap between the true metric and the
+            achieved one is unknown and changes during training. It is one motivation for MMD-style
+            methods, where the sup is exact by construction and the only approximation is the sample
+            average.
+        </p>
+
+        <h2 id="fdiv">5. $\phi$-divergences and the density-ratio trick</h2>
+
+        <p>
+            If $\phi$-divergences need $r = p/q$ and we only have samples, they look unusable. The escape
+            is that <strong>a classifier trained to separate the two samples estimates the ratio for
+            you</strong>. This one observation is the foundation of GANs, noise-contrastive estimation,
+            contrastive representation learning, and most modern mutual-information estimators.
+        </p>
+
+        <h3>5.1 Classifiers estimate density ratios</h3>
+
+        <p>
+            Label real samples $c=1$ and generated samples $c=0$, with equal class priors, and train a
+            classifier $D_\psi(x) \approx \Pr(c=1\mid x)$ with the usual cross-entropy loss. Bayes' rule
+            gives the optimum in closed form:
+        </p>
+        $$D^\star(x) = \frac{p(x)}{p(x) + q(x)} \qquad\Longrightarrow\qquad
+        \log \frac{D^\star(x)}{1 - D^\star(x)} = \log\frac{p(x)}{q(x)} = \log r(x).$$
+        <p>
+            <strong>The logit of an optimal discriminator is the log density ratio.</strong> Once you have
+            $r$, every $\phi$-divergence is available as a sample average, $D_\phi = \mathbb{E}_Q[\phi(r)]$.
+            Substituting $D^\star$ into the GAN value function recovers
+            $V(\theta,\psi^\star) = 2\,D_{\mathrm{JS}}(P\Vert Q_\theta) - \log 4$: the GAN
+            was performing $\phi$-divergence minimization all along, with the classifier as a
+            plug-in ratio estimator.
+        </p>
+
+        <h3>5.2 The variational representation and f-GAN</h3>
+
+        <p>
+            There is a cleaner and more general route. Since $\phi$ is convex, it equals the conjugate of
+            its conjugate, $\phi(u) = \sup_t \{ut - \phi^*(t)\}$. Substituting into the definition and
+            exchanging sup and integral gives a variational lower bound valid for <em>any</em> function
+            $T$:
+        </p>
+        $$D_\phi(P \Vert Q) \;\ge\; \sup_{T}\;\Big\{ \mathbb{E}_{X\sim P}\big[T(X)\big] - \mathbb{E}_{Y\sim Q}\big[\phi^*(T(Y))\big]\Big\},
+        \qquad T^\star(x) = \phi'\!\big(r(x)\big).$$
+        <p>
+            Both terms are expectations, so both are estimable from samples. This is the f-GAN
+            <a href="#r-fgan">[9]</a>: pick your favourite $\phi$, look up $\phi^*$, parameterize $T$ with
+            a network, and you get a GAN variant that minimizes that specific divergence. Taking
+            $\mathrm{KL}$ recovers the Donsker&ndash;Varadhan bound used by MINE
+            <a href="#r-mine">[10]</a> for mutual-information estimation.
+        </p>
+        <p>
+            Notice the shape shared with an IPM: <em>both are a supremum over functions of a difference of
+            two expectations</em>. The difference is that an IPM constrains the function class and takes
+            the raw difference, while a $\phi$-divergence leaves the class unconstrained and passes the
+            second term through $\phi^*$. That extra nonlinearity is what makes the objective sensitive to
+            ratios &mdash; and what makes it blow up when supports are disjoint.
+        </p>
+
+        <h3>5.3 Forward or reverse: the direction is a design decision</h3>
+
+        <p>
+            $\phi$-divergences are asymmetric, and the asymmetry has consequences you can see in samples.
+        </p>
+        <ul>
+            <li>
+                <strong>Forward, $\mathrm{KL}(P\Vert Q_\theta)$ &mdash; mass-covering.</strong> The
+                integrand is $p \log(p/q)$, which is infinite wherever $p > 0$ and $q \to 0$. The model is
+                harshly punished for missing any part of the target, so it spreads out and covers
+                everything, including the space between modes. This is what maximum likelihood minimizes,
+                and it is why likelihood-trained models produce blurry or occasionally incoherent samples.
+            </li>
+            <li>
+                <strong>Reverse, $\mathrm{KL}(Q_\theta\Vert P)$ &mdash; mode-seeking.</strong> The penalty
+                now fires where $q > 0$ but $p \approx 0$. The model is punished for producing anything
+                implausible but not for ignoring modes, so it concentrates on a subset of the target and
+                does it well. Sharp, less diverse.
+            </li>
+            <li>
+                <strong>Symmetric options</strong> &mdash; JS, Hellinger, or a $\lambda$-interpolated
+                Jensen&ndash;Shannon &mdash; sit in between and are the usual compromise.
+            </li>
+        </ul>
+        <p>
+            Whenever you see a paper choose reverse KL (score distillation, MiniLLM, RLHF regularization)
+            it is buying sharpness and accepting reduced diversity, and vice versa. It is usually the most
+            consequential single decision in the method.
+        </p>
+
+        <h2 id="estimation">6. Estimation: where the real difficulty lives</h2>
+
+        <p>
+            All of &sect;4 and &sect;5 assumed population quantities. With $n$ samples, the picture
+            changes, and three separate problems appear.
+        </p>
+
+        <h4>Sample complexity depends violently on the metric</h4>
+        <p>
+            For the empirical measure $\hat{P}_n$, the Wasserstein distance converges at
+            $\mathbb{E}\,W_1(\hat P_n, P) = O(n^{-1/d})$ in $d$ dimensions <a href="#r-weed">[11]</a>. At
+            $d = 100$ that is hopeless: the empirical Wasserstein distance between two samples from the
+            <em>same</em> distribution is large. MMD, in contrast, converges at
+            $O(n^{-1/2})$ <em>independent of dimension</em>, because it is an average of a bounded kernel
+            rather than a combinatorial matching. This is the strongest argument for kernel methods
+            &mdash; and it comes with a caveat: dimension-free <em>estimation</em> rate does not mean
+            dimension-free <em>test power</em>. With a poorly chosen kernel, MMD's ability to distinguish
+            two distributions still degrades badly, it just does so with a small variance.
+        </p>
+
+        <h4>Minibatch estimates are biased, and so are their gradients</h4>
+        <p>
+            $\widehat{\mathrm{MMD}}^2$ has an unbiased estimator, but $\widehat{\mathrm{MMD}} = \sqrt{\cdot}$
+            does not, and neither do minibatch Wasserstein or Sinkhorn values (the minibatch OT plan is
+            not a restriction of the full plan). In practice one optimizes $\mathrm{MMD}^2$ rather than
+            $\mathrm{MMD}$ for this reason, and kernel methods need <em>large batches</em>: the cross
+            term averages $nm$ kernel evaluations, and with small $n$ the estimator is too noisy to
+            provide a useful gradient. This is the practical reason GMMN-style methods were considered
+            expensive.
+        </p>
+
+        <h4>The critic is never optimal</h4>
+        <p>
+            Every method with a sup inside it &mdash; WGAN, f-GAN, MMD-GAN with a learned kernel &mdash;
+            alternates between improving the critic and improving the generator, so the generator receives
+            gradients from a <em>stale, suboptimal</em> critic. The theory (optimal $D^\star$, exact JS,
+            exact $W_1$) holds only at the inner optimum, which is never reached. Combined with &sect;4.4,
+            this means the reported loss curve is not a distance and generally does not correlate with
+            sample quality &mdash; a notorious frustration with GAN training, and something WGAN partly
+            fixed by making the critic loss at least roughly proportional to a real distance.
+        </p>
+
+        <div class="callout">
+            <p>
+                <strong>The recurring trade-off.</strong> You may have a closed-form supremum (MMD), in
+                which case you must choose a kernel by hand and you pay in large batches and weak test
+                power in high dimension. Or you may learn the witness function (WGAN, f-GAN), in which case
+                you get an adaptive, data-driven notion of difference and you pay with a minimax game,
+                unknown approximation gap, and a loss you cannot trust. Every algorithm in &sect;7 is a
+                position on this axis, and MMD-GAN is the attempt to have both.
+            </p>
+        </div>
+
+        <h2 id="algorithms">7. Algorithms</h2>
+
+        <h3>7.1 Generative moment matching networks</h3>
+
+        <p>
+            The simplest thing that works. GMMN <a href="#r-gmmn">[12]</a> (and concurrently
+            <a href="#r-dziugaite">[13]</a>) generates $y = g_\theta(u)$ from a uniform prior
+            $u \sim \mathcal{U}[-1,1]^d$ and minimizes the plug-in MMD estimate directly:
+        </p>
+        $$\min_\theta\; \widehat{\mathrm{MMD}}^2\big(\{x_i\}_{i=1}^N,\; \{g_\theta(u_j)\}_{j=1}^M\big),
+        \qquad k(x,y) = \exp\!\left(-\frac{\Vert x - y\Vert_2^2}{2\sigma^2}\right).$$
+        <p>
+            There is <strong>no discriminator and no minimax</strong> &mdash; it is a plain minimization,
+            which is the whole appeal. Because a characteristic kernel's feature map contains all
+            moments, this is moment matching to infinite order.
+        </p>
+
+        <div class="algo">
+            <div class="algo-title">Algorithm 1 &mdash; GMMN training</div>
+<pre><code>Given: kernel k (usually a mixture of Gaussians with bandwidths sigma_1..sigma_S)
+repeat:
+  1. X <- minibatch of N real samples
+  2. U <- N samples from Uniform[-1,1]^d
+  3. Y <- g_theta(U)                                  # M = N generated samples
+  4. Kxx, Kyy, Kxy <- pairwise kernel matrices
+  5. mmd2 <- mean(Kxx_offdiag) + mean(Kyy_offdiag) - 2*mean(Kxy)
+  6. theta <- Adam step on mmd2                       # note: minimization only
+# batches must be large; the estimator is the bottleneck, not the network</code></pre>
+        </div>
+
+        <p>
+            The weaknesses are exactly the ones &sect;3 and &sect;6 predict. Performance is highly
+            sensitive to $\sigma$ &mdash; the standard fix is a mixture of kernels over several bandwidths
+            &mdash; large batches are mandatory, and a fixed kernel in pixel space measures a notion of
+            similarity that has nothing to do with perceptual similarity. GMMN partly compensates by
+            running MMD in the latent space of a pretrained autoencoder, which is already an admission
+            that <em>the kernel should be learned</em>.
+        </p>
+
+        <h3>7.2 WGAN, and the fight to enforce Lipschitzness</h3>
+
+        <p>
+            WGAN <a href="#r-wgan">[3]</a> takes the dual from &sect;4.1 and parameterizes the witness
+            function with a network:
+        </p>
+        $$\min_\theta \; \sup_{\Vert f\Vert_L \le 1}\; \mathbb{E}_{x\sim P}\big[f(x)\big] - \mathbb{E}_{z\sim p(z)}\big[f(g_\theta(z))\big].$$
+        <p>
+            No kernel, no bandwidth: the critic learns which directions matter. Everything then hinges on
+            imposing the Lipschitz constraint, and the history of that is the history of GAN stability
+            work.
+        </p>
+        <ul>
+            <li>
+                <strong>Weight clipping</strong> (original WGAN): clamp every weight to $[-c,c]$. It works
+                but is crude &mdash; it biases the critic toward very simple functions, and since the
+                effective Lipschitz bound is a product over layers, gradients decay or explode
+                exponentially with depth. This is why the paper recommends RMSProp over momentum-based
+                optimizers <a href="#r-binkowski">[14]</a>.
+            </li>
+            <li>
+                <strong>Gradient penalty</strong> (WGAN-GP, <a href="#r-wgangp">[15]</a>): a 1-Lipschitz
+                differentiable function has $\Vert\nabla f\Vert = 1$ almost everywhere on the optimal
+                transport path, so penalize deviation from it,
+                $\lambda\,\mathbb{E}_{\hat x}\big[(\Vert\nabla_{\hat x} f_\psi(\hat x)\Vert_2 - 1)^2\big]$,
+                with $\hat x$ sampled uniformly on segments between real and fake points. This is a soft,
+                local constraint and it is what made WGANs practical.
+            </li>
+            <li>
+                <strong>Spectral normalization</strong> <a href="#r-sn">[16]</a>: divide each weight matrix
+                by its largest singular value (estimated with one power iteration per step), which bounds
+                the Lipschitz constant of the whole network by construction. Cheap, architectural, and now
+                the default.
+            </li>
+        </ul>
+
+        <div class="algo">
+            <div class="algo-title">Algorithm 2 &mdash; WGAN with gradient penalty</div>
+<pre><code>repeat:
+  # ---- critic: n_critic inner steps (typically 5)
+  for i = 1..n_critic:
+      x     <- real minibatch ;  z <- N(0, I)
+      y     <- g_theta(z)
+      eps   ~ Uniform[0,1] ;  xh <- eps*x + (1-eps)*y      # interpolate
+      gp    <- ( ||grad_xh f_psi(xh)||_2 - 1 )^2
+      L_psi <- -( mean f_psi(x) - mean f_psi(y) ) + lambda * mean(gp)
+      psi   <- Adam step on L_psi
+
+  # ---- generator: one step
+  z       <- N(0, I)
+  L_theta <- -mean f_psi(g_theta(z))                        # push critic score up
+  theta   <- Adam step on L_theta
+
+# mean f_psi(x) - mean f_psi(y) is an estimate of W_1; it should decrease
+# and it (unlike the vanilla GAN loss) loosely tracks sample quality</code></pre>
+        </div>
+
+        <p>
+            The unresolved objection is capacity. Arora et al. <a href="#r-arora">[8]</a> showed a network
+            critic cannot represent the true Wasserstein supremum, so WGAN is optimizing a weaker
+            surrogate than advertised. If a single learned function is too weak, an obvious response is
+            to compare in a richer space &mdash; match higher-order moments through a kernel &mdash; which
+            is the next section.
+        </p>
+
+        <h3>7.3 MMD-GAN: learn the kernel</h3>
+
+        <p>
+            MMD-GAN <a href="#r-mmdgan">[17]</a> is the synthesis. GMMN's problem is a fixed kernel in the
+            wrong space; WGAN's problem is a single-function critic. So keep MMD's closed-form supremum
+            but make the kernel <em>adversarial</em>:
+        </p>
+        $$\min_\theta\; \max_{\kappa \in \mathcal{K}}\; \mathrm{MMD}_{\kappa}\big(P,\,Q_\theta\big).$$
+        <p>
+            The construction rests on a small, elegant fact. If $k$ is characteristic and $f$ is
+            <strong>injective</strong>, then the composition $\tilde k(x,x') = k\big(f(x), f(x')\big)$ is
+            still characteristic. So we can learn an arbitrary feature map and compose it with a fixed
+            Gaussian kernel, and the resulting object is still a valid metric:
+        </p>
+        $$\tilde k_w(x, x') = \exp\!\big(-\Vert f_w(x) - f_w(x')\Vert_2^2\big),
+        \qquad \min_\theta \max_{w}\; \mathrm{MMD}_{k \circ f_w}(P, Q_\theta).$$
+        <p>
+            Why compose with a Gaussian rather than let the network output a similarity directly? Because
+            an arbitrary learned $f_w(x,x')$ need not be positive definite, and then none of the RKHS
+            theory &mdash; the closed form, the metric property, the mean embedding &mdash; applies. The
+            composition gets a learned representation while keeping the guarantees for free.
+        </p>
+        <p>
+            Injectivity is enforced approximately by making $f_w$ the encoder of an autoencoder,
+            $w = \{w_e, w_d\}$, with a reconstruction penalty:
+        </p>
+        $$\min_\theta \max_{w}\; \mathrm{MMD}_{k\circ f_{w_e}}(P, Q_\theta)
+        \;-\; \lambda\, \mathbb{E}_{y \in X \cup g_\theta(Z)} \big\Vert y - f_{w_d}\big(f_{w_e}(y)\big)\big\Vert_2^2 .$$
+
+        <div class="algo">
+            <div class="algo-title">Algorithm 3 &mdash; MMD-GAN</div>
+<pre><code>repeat:
+  # ---- adversarial kernel: maximize MMD in the learned feature space
+  for i = 1..n_critic:
+      x <- real batch ; y <- g_theta(z)
+      hx, hy <- f_we(x), f_we(y)                    # encoder features
+      mmd2   <- MMD2_gaussian(hx, hy)
+      rec    <- ||x - f_wd(hx)||^2 + ||y - f_wd(hy)||^2     # keep f_we injective
+      L_w    <- -( mmd2 - lambda * rec )
+      w      <- step on L_w      (then clip / spectral-normalize f_we)
+
+  # ---- generator: minimize the same MMD
+  y       <- g_theta(z)
+  L_theta <- MMD2_gaussian(f_we(x), f_we(y))
+  theta   <- step on L_theta</code></pre>
+        </div>
+
+        <p>
+            Empirically MMD-GAN beats GMMN decisively and is competitive with WGAN at smaller network
+            size and shorter training time <a href="#r-binkowski">[14]</a>. Two refinements matter. First,
+            the same Lipschitz problem reappears &mdash; an unconstrained $f_w$ can inflate MMD without
+            bound &mdash; and the fix that works is to regularize the <em>features</em> rather than the
+            witness function: gradient-constrained MMD <a href="#r-arbel">[18]</a> and Sobolev GAN
+            <a href="#r-sobolev">[19]</a> both penalize the gradient of the critic/features, effectively
+            "weakening" the MMD into something with better-behaved gradients. Second, this line gave the
+            field a good evaluation metric: <strong>Kernel Inception Distance</strong>
+            <a href="#r-binkowski">[14]</a> is the unbiased $\mathrm{MMD}^2$ estimator with a polynomial
+            kernel on Inception features, and unlike FID it is unbiased and has a usable variance
+            estimate.
+        </p>
+
+        <h3>7.4 f-GAN and the divergence zoo</h3>
+
+        <p>
+            f-GAN <a href="#r-fgan">[9]</a> operationalizes &sect;5.2: choose $\phi$, get an algorithm.
+            The critic is written $T_\psi(x) = a_\phi(V_\psi(x))$ with an output activation $a_\phi$ that
+            keeps $T$ in the domain of $\phi^*$.
+        </p>
+
+        <div class="algo">
+            <div class="algo-title">Algorithm 4 &mdash; f-GAN</div>
+<pre><code>Given: convex phi with phi(1)=0; conjugate phi*; output activation a_phi
+repeat:
+  x <- real batch ; y <- g_theta(z)
+  T_x, T_y <- a_phi(V_psi(x)), a_phi(V_psi(y))
+  L_psi   <- -( mean(T_x) - mean(phi_star(T_y)) )   # maximize the variational bound
+  psi     <- step on L_psi
+  L_theta <-  ( mean(T_x) - mean(phi_star(T_y)) )   # minimize the divergence
+  theta   <- step on L_theta
+
+# phi = u log u        -> KL          a_phi = identity,     phi*(t) = exp(t-1)
+# phi = -log u         -> reverse KL  a_phi = -exp(-v),     phi*(t) = -1-log(-t)
+# phi = JS generator   -> vanilla GAN a_phi = -softplus(-v),phi*(t) = -log(2-e^t)
+# phi = (u-1)^2        -> Pearson     a_phi = identity,     phi*(t) = t^2/4 + t</code></pre>
+        </div>
+
+        <p>
+            The honest finding from this line of work is that the choice of $\phi$ matters far less than
+            the regularization of the critic. Least-squares GAN (Pearson $\chi^2$), hinge-loss GAN, and
+            JS-GAN all behave similarly once spectral normalization is applied. The divergence determines
+            the idealized objective; the constraint on the critic determines the actual optimization
+            landscape, and in practice the latter dominates.
+        </p>
+
+        <h3>7.5 Entropic optimal transport: Sinkhorn divergences</h3>
+
+        <p>
+            A fifth position on the axis: keep optimal transport's geometry but make the primal problem
+            solvable on a minibatch by adding an entropy term
+        </p>
+        $$\mathrm{OT}_\varepsilon(P,Q) = \min_{\gamma\in\Pi(P,Q)} \mathbb{E}_\gamma\big[c(x,y)\big] + \varepsilon\, \mathrm{KL}\big(\gamma \Vert P\otimes Q\big),$$
+        <p>
+            which turns the linear program into a strictly convex one solvable by a few dozen iterations
+            of the <strong>Sinkhorn</strong> algorithm &mdash; alternating row and column rescalings of
+            $K = e^{-C/\varepsilon}$, all differentiable and all on the GPU <a href="#r-cuturi">[20]</a>.
+            Since $\mathrm{OT}_\varepsilon(P,P) \ne 0$, one uses the debiased
+            <strong>Sinkhorn divergence</strong> <a href="#r-genevay">[21]</a>
+        </p>
+        $$S_\varepsilon(P,Q) = \mathrm{OT}_\varepsilon(P,Q) - \tfrac12 \mathrm{OT}_\varepsilon(P,P) - \tfrac12\mathrm{OT}_\varepsilon(Q,Q),$$
+        <p>
+            which has the pleasing property of <em>interpolating between the two families</em>: as
+            $\varepsilon \to 0$ it recovers Wasserstein, and as $\varepsilon\to\infty$ it converges to
+            MMD with kernel $-c$. The regularization parameter is a dial between "sharp geometry, hard to
+            estimate" and "smooth statistics, easy to estimate," which is a rather satisfying way to see
+            the trade-off from &sect;6. OT-GAN <a href="#r-otgan">[22]</a> combines it with a learned
+            cost, since the choice of ground metric $c$ is the OT analogue of choosing a kernel.
+        </p>
+
+        <h2 id="critic-free">8. Critic-free matching: scores and transport</h2>
+
+        <p>
+            Everything so far compares $P$ and $Q$ through function values. A different idea: compare
+            them through the <strong>gradients of their log-densities</strong>. This buys a large
+            advantage &mdash; $\nabla_x \log p(x)$ is invariant to the normalizing constant of $p$ &mdash;
+            so it works when the target is known only up to a constant, which is exactly the situation in
+            Bayesian inference, energy-based models, and reward-tilted policies.
+        </p>
+
+        <h3>8.1 Fisher divergence and score matching</h3>
+        $$D_F(P \Vert Q) = \mathbb{E}_{x\sim P}\big\Vert \nabla_x\log p(x) - \nabla_x \log q(x)\big\Vert^2 .$$
+        <p>
+            With integration by parts this becomes computable from samples of $P$ alone without knowing
+            $\nabla\log p$, which is Hyvärinen's score matching <a href="#r-hyvarinen">[23]</a>; its
+            denoising variant is the objective underlying diffusion models. It is a genuine distribution
+            matching criterion, just one that compares vector fields rather than expectations.
+        </p>
+
+        <h3>8.2 Stein discrepancies and SVGD</h3>
+
+        <p>
+            The kernelized Stein discrepancy is an IPM with a clever twist. Define the Stein operator
+            $\mathcal{A}_p f(x) = f(x)\nabla_x\log p(x)^\top + \nabla_x f(x)$; under mild conditions
+            $\mathbb{E}_{P}[\mathcal{A}_p f] = 0$ for all $f$ in a suitable class. So the quantity
+        </p>
+        $$\mathrm{KSD}(Q, P) = \sup_{\Vert f\Vert_{\mathcal{H}_k}\le 1} \mathbb{E}_{x\sim Q}\big[\mathcal{A}_p f(x)\big]$$
+        <p>
+            is zero iff $Q = P$, has a closed form like MMD, and &mdash; the important part &mdash;
+            requires only <em>samples from $Q$</em> and the <em>score of $P$</em>
+            <a href="#r-ksd">[24]</a>. Turning its gradient into a particle update gives Stein variational
+            gradient descent <a href="#r-svgd">[25]</a>, which moves a set of particles to match a target
+            with an attraction term (toward high density) and a kernel repulsion term (enforcing
+            diversity).
+        </p>
+
+        <h3>8.3 Diffusion and flow matching as distribution matching without a critic</h3>
+
+        <p>
+            It is worth stating plainly that modern generative models do distribution matching
+            <em>without ever computing a discrepancy</em>. A diffusion model regresses the score of noisy
+            data; a flow matching model regresses a conditional velocity field. Both objectives are plain
+            least squares whose minimizer provably transports the prior onto the data distribution.
+            There is no adversary, no kernel, no density ratio &mdash; and this is a large part of why
+            they displaced GANs. I wrote about the details in
+            <a href="gen_models.html">The Evolution of Generative Models</a>.
+        </p>
+        <p>
+            The relevance here is that the explicit-discrepancy machinery did not disappear; it moved to
+            wherever a <em>pretrained</em> model needs to be matched by another model. That is &sect;9.
+        </p>
+
+        <h2 id="beyond">9. Distribution matching beyond generative modeling</h2>
+
+        <h3>9.1 Domain adaptation and invariance</h3>
+
+        <p>
+            Given labelled source data and unlabelled target data, train a feature extractor $h_\phi$ so
+            that $h_\phi(X_{\text{src}})$ and $h_\phi(X_{\text{tgt}})$ are indistinguishable; then a
+            classifier trained on the source features transfers. This is distribution matching in feature
+            space, and all three families appear:
+        </p>
+        <ul>
+            <li>
+                <strong>DANN</strong> <a href="#r-dann">[26]</a> attaches a domain classifier through a
+                <em>gradient reversal layer</em>, so the features are trained to maximize the domain
+                classifier's loss. That is an adversarial JS minimization implemented in one backward pass
+                &mdash; no alternating loop, which is a nice trick.
+            </li>
+            <li>
+                <strong>DAN / JAN</strong> <a href="#r-dan">[27]</a> add a multi-kernel MMD penalty between
+                source and target activations at several layers. No adversary, just &sect;4.2 as a
+                regularizer.
+            </li>
+            <li>
+                <strong>CORAL</strong> <a href="#r-coral">[28]</a> matches only second-order statistics,
+                $\Vert C_{\text{src}} - C_{\text{tgt}}\Vert_F^2$. This is MMD with a polynomial kernel of
+                degree two, i.e. deliberately weak matching &mdash; and it is often competitive, which is
+                a useful reminder that stronger discrepancies are not automatically better.
+            </li>
+        </ul>
+        <p>
+            The same template covers fairness (make representations independent of a protected attribute),
+            batch-effect correction in single-cell biology, and sim-to-real transfer.
+        </p>
+
+        <h3>9.2 Diffusion distillation: matching a teacher's distribution</h3>
+
+        <p>
+            This is where distribution matching is most active today. A diffusion teacher needs 50
+            network evaluations per sample; we want a one-step student $g_\theta$. Regressing on the
+            teacher's outputs pairwise gives blurry averages, so instead we match distributions:
+            minimize the reverse KL between the student's output distribution and the teacher's.
+        </p>
+        <p>
+            The problem is that neither density is available &mdash; but their <em>scores</em> are, and
+            the gradient of reverse KL only needs scores. For the noised student distribution
+            $q_{\theta,t}$ and noised teacher $p_t$,
+        </p>
+        $$\nabla_\theta\, \mathrm{KL}\big(q_{\theta,t} \Vert p_t\big)
+        = -\,\mathbb{E}\Big[\big(\underbrace{s_{p}(x_t,t)}_{\text{teacher score}} - \underbrace{s_{q_\theta}(x_t,t)}_{\text{student score}}\big)^{\!\top} \frac{\partial x_t}{\partial \theta}\Big].$$
+        <p>
+            The teacher score is the frozen pretrained model. The student score is unavailable, so a
+            second "fake" diffusion model is trained online, by ordinary denoising score matching, on the
+            student's own samples. <strong>Distribution Matching Distillation</strong>
+            <a href="#r-dmd">[29]</a>, Diff-Instruct <a href="#r-diffinstruct">[30]</a>, and Variational
+            Score Distillation <a href="#r-vsd">[31]</a> are all this idea; the older Score Distillation
+            Sampling of DreamFusion <a href="#r-sds">[32]</a> is the special case where the student score
+            is replaced by the noise itself, which is why SDS needs enormous guidance weights and produces
+            oversaturated results.
+        </p>
+
+        <div class="algo">
+            <div class="algo-title">Algorithm 5 &mdash; Distribution matching distillation (sketch)</div>
+<pre><code>Frozen: teacher score s_real(x_t, t) from the pretrained diffusion model
+Learn:  one-step generator g_theta ; auxiliary "fake" score s_fake(x_t, t; xi)
+
+repeat:
+  # ---- fit the auxiliary score model to the student's current distribution
+  z  <- N(0, I) ;  x0 <- g_theta(z).detach()
+  t  <- Uniform ; eps <- N(0, I)
+  xt <- alpha_t * x0 + sigma_t * eps
+  xi <- step on || eps_xi(xt, t) - eps ||^2          # plain denoising score matching
+
+  # ---- update the generator along the score difference
+  z  <- N(0, I) ;  x0 <- g_theta(z)
+  t  <- Uniform ; xt <- alpha_t * x0 + sigma_t * N(0, I)
+  grad <- ( s_fake(xt, t) - s_real(xt, t) )          # = -grad of reverse KL wrt x
+  theta <- step using backprop of  (x0 * stopgrad(grad)).sum()
+
+# reverse KL is mode-seeking, so practical systems (DMD2) add a GAN loss
+# and/or a small regression term to recover the diversity it drops</code></pre>
+        </div>
+
+        <p>
+            Notice the composition: a reverse-KL objective estimated through scores, stabilized by an
+            adversarial term from &sect;7, distilling a model trained by score matching from &sect;8. Every
+            family in this post appears in one loop.
+        </p>
+
+        <h3>9.3 Language model distillation: the direction of KL, again</h3>
+
+        <p>
+            Standard knowledge distillation minimizes forward KL between teacher and student
+            token distributions, which is mass-covering: the student wastes capacity trying to reproduce
+            the teacher's entire long tail, which it lacks the capacity to represent, and ends up
+            producing samples the teacher would never generate. <strong>MiniLLM</strong>
+            <a href="#r-minillm">[33]</a> switched to reverse KL for exactly this reason, so the student
+            concentrates on the teacher's high-probability modes; because the objective is now an
+            expectation under the student, it requires policy-gradient machinery.
+            <strong>Generalized KD</strong> <a href="#r-gkd">[34]</a> makes both choices explicit &mdash;
+            a divergence parameter (interpolated JSD) and a data source (teacher-generated vs
+            student-generated sequences) &mdash; and shows the second matters at least as much, since
+            training on the student's own outputs eliminates the train/inference distribution mismatch.
+        </p>
+
+        <h3>9.4 RLHF and DPO as constrained distribution matching</h3>
+
+        <p>
+            The RLHF objective is explicitly a distribution matching problem in disguise:
+        </p>
+        $$\max_\pi\; \mathbb{E}_{y\sim\pi(\cdot|x)}\big[r(x,y)\big] - \beta\, \mathrm{KL}\big(\pi \Vert \pi_{\text{ref}}\big)
+        \qquad\Longrightarrow\qquad
+        \pi^\star(y|x) \;\propto\; \pi_{\text{ref}}(y|x)\,\exp\!\Big(\tfrac{1}{\beta} r(x,y)\Big).$$
+        <p>
+            The optimum is a known, unnormalized target distribution &mdash; a reward-tilted reference
+            model &mdash; and RL is just one way of matching it. DPO <a href="#r-dpo">[35]</a> inverts the
+            relation to write $r$ in terms of $\pi^\star$ and $\pi_{\text{ref}}$, eliminating both the
+            reward model and the sampling loop. The intractable normalizer cancels because the loss only
+            involves <em>differences</em> of log-ratios between a preferred and dispreferred response,
+            which is the same "ratios are available even when densities are not" move as &sect;5.1.
+        </p>
+
+        <h3>9.5 Dataset distillation and evaluation metrics</h3>
+
+        <p>
+            Two smaller but instructive uses. <strong>Dataset distillation by distribution matching</strong>
+            <a href="#r-dm">[36]</a> synthesizes a tiny training set whose feature-mean embedding matches
+            the real dataset's under randomly initialized encoders &mdash; MMD with a random-feature
+            kernel, and dramatically cheaper than the gradient-matching alternatives.
+        </p>
+        <p>
+            And every metric used to <em>evaluate</em> generative models is a discrepancy from this post:
+        </p>
+        <ul>
+            <li>
+                <strong>FID</strong> <a href="#r-fid">[37]</a> fits a Gaussian to Inception features of
+                each set and computes the closed-form $W_2^2$ between them,
+                $\Vert\mu_1-\mu_2\Vert^2 + \operatorname{Tr}\big(\Sigma_1+\Sigma_2-2(\Sigma_1\Sigma_2)^{1/2}\big)$.
+                It is a Wasserstein distance under a Gaussian assumption, and it is biased at small
+                sample sizes &mdash; FID computed on 5k samples is not comparable to FID on 50k.
+            </li>
+            <li>
+                <strong>KID</strong> <a href="#r-binkowski">[14]</a> is the unbiased $\mathrm{MMD}^2$
+                estimator on the same features, so it is comparable across sample sizes and comes with
+                error bars.
+            </li>
+            <li>
+                <strong>Precision and recall</strong> <a href="#r-prec">[38]</a> deliberately break the
+                single-number summary into the two failure modes of &sect;5.3: precision measures how much
+                of $Q$ lies in the support of $P$ (sample quality), recall the reverse (mode coverage).
+            </li>
+        </ul>
+
+        <h2 id="practical">10. A practical guide to choosing</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:20%">Situation</th>
+                    <th style="width:26%">Reasonable choice</th>
+                    <th>Why</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Matching in a low-dimensional latent or feature space</td>
+                    <td>MMD with a mixture of Gaussian bandwidths, or Sinkhorn</td>
+                    <td>No adversary, no extra network, stable. Dimension is low enough that the kernel is meaningful.</td>
+                </tr>
+                <tr>
+                    <td>Matching in pixel space from scratch</td>
+                    <td>Learned critic: WGAN-GP or hinge loss with spectral norm &mdash; or, better, don't; use diffusion / flow matching</td>
+                    <td>Fixed kernels do not encode perceptual similarity; the critic has to learn the right notion of difference.</td>
+                </tr>
+                <tr>
+                    <td>Both supports are (nearly) disjoint</td>
+                    <td>An IPM &mdash; $W_1$, MMD, Sinkhorn</td>
+                    <td>$\phi$-divergences saturate and give no gradient (&sect;3).</td>
+                </tr>
+                <tr>
+                    <td>The target is known only up to a normalizer</td>
+                    <td>Reverse KL via scores, or KSD / SVGD</td>
+                    <td>Score-based criteria are invariant to the partition function (&sect;8).</td>
+                </tr>
+                <tr>
+                    <td>You want sharpness and can sacrifice diversity</td>
+                    <td>Reverse KL, or add an adversarial term</td>
+                    <td>Mode-seeking. Standard in distillation.</td>
+                </tr>
+                <tr>
+                    <td>You must not drop modes</td>
+                    <td>Forward KL / maximum likelihood, or a symmetric divergence</td>
+                    <td>Mass-covering. Standard in pretraining.</td>
+                </tr>
+                <tr>
+                    <td>Small batches are forced on you</td>
+                    <td>Avoid MMD and minibatch OT</td>
+                    <td>Their estimators need $O(n^2)$ pairs; the gradient is too noisy otherwise (&sect;6).</td>
+                </tr>
+                <tr>
+                    <td>You need a number you can trust for evaluation</td>
+                    <td>KID (unbiased MMD$^2$), plus precision/recall</td>
+                    <td>Never trust a learned critic's loss as a distance (&sect;4.4).</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Things I'd want a reader to leave with</h3>
+        <p>
+            <strong>The taxonomy is real and predictive.</strong> Differences (IPMs) stay finite and
+            differentiable when supports are disjoint because the witness function is constrained to be
+            smooth; ratios ($\phi$-divergences) blow up or saturate because they read the two
+            distributions pointwise. Total variation is the only member of both families, and it behaves
+            like a ratio-based divergence in practice.
+        </p>
+        <p>
+            <strong>MMD's real advantage is not statistical power, it is that the supremum is
+            closed-form.</strong> No inner optimization means no minimax, no stale critic, no unknown
+            approximation gap &mdash; you pay for it by having to choose a kernel and use large batches.
+            MMD-GAN's contribution is recognizing that the kernel can be learned while keeping the
+            closed form, by composing a learned injective feature map with a characteristic kernel.
+        </p>
+        <p>
+            <strong>Constraining the critic matters more than choosing the divergence.</strong> Once
+            spectral normalization or a gradient penalty is in place, most GAN objectives behave
+            similarly. The theory says the divergence determines the optimum; the practice says the
+            constraint determines whether you get anywhere near it.
+        </p>
+        <p>
+            <strong>And the direction of the divergence is the decision to think hardest about.</strong>
+            Forward versus reverse KL is the difference between blurry-but-complete and
+            sharp-but-narrow, and it explains, with one idea, why likelihood models are diverse and
+            hazy, why score distillation is sharp and mode-collapsed, why MiniLLM flipped the KL, and
+            why practical distillation systems add a GAN loss to buy back what reverse KL threw away.
+        </p>
+
+        <h2 id="refs">11. References</h2>
+        <ul class="refs">
+            <li id="r-muller"><span class="rid">[1]</span> A. Müller. <em>Integral probability metrics and their generating classes of functions.</em> Advances in Applied Probability, 1997.</li>
+            <li id="r-sri"><span class="rid">[2]</span> B. Sriperumbudur et al. <em>On integral probability metrics, φ-divergences and binary classification.</em> <a href="https://arxiv.org/abs/0901.2698" target="_blank">arXiv:0901.2698</a>.</li>
+            <li id="r-wgan"><span class="rid">[3]</span> M. Arjovsky, S. Chintala, L. Bottou. <em>Wasserstein GAN.</em> <a href="https://arxiv.org/abs/1701.07875" target="_blank">arXiv:1701.07875</a>.</li>
+            <li id="r-basso"><span class="rid">[4]</span> G. Basso. <em>A Hitchhiker's guide to Wasserstein distances.</em> Lecture notes, 2015.</li>
+            <li id="r-gretton"><span class="rid">[5]</span> A. Gretton et al. <em>A kernel two-sample test.</em> <a href="https://jmlr.org/papers/v13/gretton12a.html" target="_blank">JMLR 13, 2012</a>.</li>
+            <li id="r-sejdinovic"><span class="rid">[6]</span> D. Sejdinovic et al. <em>Equivalence of distance-based and RKHS-based statistics in hypothesis testing.</em> <a href="https://arxiv.org/abs/1207.6076" target="_blank">arXiv:1207.6076</a>.</li>
+            <li id="r-cramer"><span class="rid">[7]</span> M. Bellemare et al. <em>The Cramer distance as a solution to biased Wasserstein gradients.</em> <a href="https://arxiv.org/abs/1705.10743" target="_blank">arXiv:1705.10743</a>.</li>
+            <li id="r-arora"><span class="rid">[8]</span> S. Arora et al. <em>Generalization and equilibrium in generative adversarial nets.</em> <a href="https://arxiv.org/abs/1703.00573" target="_blank">arXiv:1703.00573</a>.</li>
+            <li id="r-fgan"><span class="rid">[9]</span> S. Nowozin, B. Cseke, R. Tomioka. <em>f-GAN: training generative neural samplers using variational divergence minimization.</em> <a href="https://arxiv.org/abs/1606.00709" target="_blank">arXiv:1606.00709</a>.</li>
+            <li id="r-mine"><span class="rid">[10]</span> M. Belghazi et al. <em>MINE: mutual information neural estimation.</em> <a href="https://arxiv.org/abs/1801.04062" target="_blank">arXiv:1801.04062</a>.</li>
+            <li id="r-weed"><span class="rid">[11]</span> J. Weed, F. Bach. <em>Sharp asymptotic and finite-sample rates of convergence of empirical measures in Wasserstein distance.</em> <a href="https://arxiv.org/abs/1707.00087" target="_blank">arXiv:1707.00087</a>.</li>
+            <li id="r-gmmn"><span class="rid">[12]</span> Y. Li, K. Swersky, R. Zemel. <em>Generative moment matching networks.</em> <a href="https://arxiv.org/abs/1502.02761" target="_blank">arXiv:1502.02761</a>.</li>
+            <li id="r-dziugaite"><span class="rid">[13]</span> G. Dziugaite, D. Roy, Z. Ghahramani. <em>Training generative neural networks via maximum mean discrepancy optimization.</em> <a href="https://arxiv.org/abs/1505.03906" target="_blank">arXiv:1505.03906</a>.</li>
+            <li id="r-binkowski"><span class="rid">[14]</span> M. Bińkowski et al. <em>Demystifying MMD GANs.</em> <a href="https://arxiv.org/abs/1801.01401" target="_blank">arXiv:1801.01401</a>.</li>
+            <li id="r-wgangp"><span class="rid">[15]</span> I. Gulrajani et al. <em>Improved training of Wasserstein GANs.</em> <a href="https://arxiv.org/abs/1704.00028" target="_blank">arXiv:1704.00028</a>.</li>
+            <li id="r-sn"><span class="rid">[16]</span> T. Miyato et al. <em>Spectral normalization for generative adversarial networks.</em> <a href="https://arxiv.org/abs/1802.05957" target="_blank">arXiv:1802.05957</a>.</li>
+            <li id="r-mmdgan"><span class="rid">[17]</span> C.-L. Li et al. <em>MMD GAN: towards deeper understanding of moment matching network.</em> <a href="https://arxiv.org/abs/1705.08584" target="_blank">arXiv:1705.08584</a>.</li>
+            <li id="r-arbel"><span class="rid">[18]</span> M. Arbel et al. <em>On gradient regularizers for MMD GANs.</em> <a href="https://arxiv.org/abs/1805.11565" target="_blank">arXiv:1805.11565</a>.</li>
+            <li id="r-sobolev"><span class="rid">[19]</span> Y. Mroueh et al. <em>Sobolev GAN.</em> <a href="https://arxiv.org/abs/1711.04894" target="_blank">arXiv:1711.04894</a>.</li>
+            <li id="r-cuturi"><span class="rid">[20]</span> M. Cuturi. <em>Sinkhorn distances: lightspeed computation of optimal transport.</em> <a href="https://arxiv.org/abs/1306.0895" target="_blank">arXiv:1306.0895</a>.</li>
+            <li id="r-genevay"><span class="rid">[21]</span> A. Genevay, G. Peyré, M. Cuturi. <em>Learning generative models with Sinkhorn divergences.</em> <a href="https://arxiv.org/abs/1706.00292" target="_blank">arXiv:1706.00292</a>.</li>
+            <li id="r-otgan"><span class="rid">[22]</span> T. Salimans et al. <em>Improving GANs using optimal transport.</em> <a href="https://arxiv.org/abs/1803.05573" target="_blank">arXiv:1803.05573</a>.</li>
+            <li id="r-hyvarinen"><span class="rid">[23]</span> A. Hyvärinen. <em>Estimation of non-normalized statistical models by score matching.</em> <a href="https://jmlr.org/papers/v6/hyvarinen05a.html" target="_blank">JMLR 6, 2005</a>.</li>
+            <li id="r-ksd"><span class="rid">[24]</span> Q. Liu, J. Lee, M. Jordan. <em>A kernelized Stein discrepancy for goodness-of-fit tests.</em> <a href="https://arxiv.org/abs/1602.03253" target="_blank">arXiv:1602.03253</a>.</li>
+            <li id="r-svgd"><span class="rid">[25]</span> Q. Liu, D. Wang. <em>Stein variational gradient descent.</em> <a href="https://arxiv.org/abs/1608.04471" target="_blank">arXiv:1608.04471</a>.</li>
+            <li id="r-dann"><span class="rid">[26]</span> Y. Ganin, V. Lempitsky. <em>Unsupervised domain adaptation by backpropagation.</em> <a href="https://arxiv.org/abs/1409.7495" target="_blank">arXiv:1409.7495</a>.</li>
+            <li id="r-dan"><span class="rid">[27]</span> M. Long et al. <em>Learning transferable features with deep adaptation networks.</em> <a href="https://arxiv.org/abs/1502.02791" target="_blank">arXiv:1502.02791</a>.</li>
+            <li id="r-coral"><span class="rid">[28]</span> B. Sun, K. Saenko. <em>Deep CORAL: correlation alignment for deep domain adaptation.</em> <a href="https://arxiv.org/abs/1607.01719" target="_blank">arXiv:1607.01719</a>.</li>
+            <li id="r-dmd"><span class="rid">[29]</span> T. Yin et al. <em>One-step diffusion with distribution matching distillation.</em> <a href="https://arxiv.org/abs/2311.18828" target="_blank">arXiv:2311.18828</a>; <em>DMD2</em>, <a href="https://arxiv.org/abs/2405.14867" target="_blank">arXiv:2405.14867</a>.</li>
+            <li id="r-diffinstruct"><span class="rid">[30]</span> W. Luo et al. <em>Diff-Instruct: a universal approach for transferring knowledge from pre-trained diffusion models.</em> <a href="https://arxiv.org/abs/2305.18455" target="_blank">arXiv:2305.18455</a>.</li>
+            <li id="r-vsd"><span class="rid">[31]</span> Z. Wang et al. <em>ProlificDreamer: high-fidelity text-to-3D generation with variational score distillation.</em> <a href="https://arxiv.org/abs/2305.16213" target="_blank">arXiv:2305.16213</a>.</li>
+            <li id="r-sds"><span class="rid">[32]</span> B. Poole et al. <em>DreamFusion: text-to-3D using 2D diffusion.</em> <a href="https://arxiv.org/abs/2209.14988" target="_blank">arXiv:2209.14988</a>.</li>
+            <li id="r-minillm"><span class="rid">[33]</span> Y. Gu et al. <em>MiniLLM: knowledge distillation of large language models.</em> <a href="https://arxiv.org/abs/2306.08543" target="_blank">arXiv:2306.08543</a>.</li>
+            <li id="r-gkd"><span class="rid">[34]</span> R. Agarwal et al. <em>On-policy distillation of language models (GKD).</em> <a href="https://arxiv.org/abs/2306.13649" target="_blank">arXiv:2306.13649</a>.</li>
+            <li id="r-dpo"><span class="rid">[35]</span> R. Rafailov et al. <em>Direct preference optimization.</em> <a href="https://arxiv.org/abs/2305.18290" target="_blank">arXiv:2305.18290</a>.</li>
+            <li id="r-dm"><span class="rid">[36]</span> B. Zhao, H. Bilen. <em>Dataset condensation with distribution matching.</em> <a href="https://arxiv.org/abs/2110.04181" target="_blank">arXiv:2110.04181</a>.</li>
+            <li id="r-fid"><span class="rid">[37]</span> M. Heusel et al. <em>GANs trained by a two time-scale update rule converge to a local Nash equilibrium (FID).</em> <a href="https://arxiv.org/abs/1706.08500" target="_blank">arXiv:1706.08500</a>.</li>
+            <li id="r-prec"><span class="rid">[38]</span> T. Kynkäänniemi et al. <em>Improved precision and recall metric for assessing generative models.</em> <a href="https://arxiv.org/abs/1904.06991" target="_blank">arXiv:1904.06991</a>.</li>
+        </ul>
     </article>
 
     <!-- Footer -->
